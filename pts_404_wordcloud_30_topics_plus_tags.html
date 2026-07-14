@@ -1,0 +1,188 @@
+<div style="padding:0;">
+  <div id="wrap" style="position:relative; max-width:680px; margin:0 auto;"></div>
+</div>
+<script>
+requestAnimationFrame(function(){
+  const wrap = document.getElementById('wrap');
+  const avail = wrap.parentElement.clientWidth || 680;
+  const W = Math.max(320, Math.min(680, avail - 8));
+  wrap.style.width = W + 'px';
+
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.font = '900 100px Arial, sans-serif';
+  const fontSize = Math.floor(100 * (W * 0.94) / ctx.measureText('404').width);
+  const H = Math.floor(fontSize * 1.12);
+  canvas.width = W;
+  canvas.height = H;
+  wrap.style.height = H + 'px';
+
+  ctx.font = '900 ' + fontSize + 'px Arial, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillStyle = '#000';
+  ctx.fillText('404', W / 2, H / 2);
+
+  const mask = ctx.getImageData(0, 0, W, H).data;
+  function inside(x, y) {
+    if (x < 0 || y < 0 || x >= W || y >= H) return false;
+    return mask[(Math.floor(y) * W + Math.floor(x)) * 4 + 3] > 128;
+  }
+  function boxInside(cx, cy, bw, bh) {
+    const x0 = cx - bw/2, y0 = cy - bh/2;
+    const nx = Math.max(4, Math.ceil(bw / 8));
+    for (let i = 0; i <= nx; i++) {
+      if (!inside(x0 + bw * i / nx, y0 + 1)) return false;
+      if (!inside(x0 + bw * i / nx, y0 + bh - 1)) return false;
+      if (!inside(x0 + bw * i / nx, y0 + bh / 2)) return false;
+    }
+    return true;
+  }
+
+  const T = 'https://news.pts.org.tw/hotTopic/';
+  const G = 'https://news.pts.org.tw/tag/';
+
+  // 全部 30 個熱門議題（第 1、2 頁），前段字級較大
+  const topics = [
+    { t: '颱風巴威', w: 3, u: T+'703' },
+    { t: '中聯食油致癌物超標', w: 3, u: T+'702' },
+    { t: '美伊戰火', w: 3, u: T+'637' },
+    { t: '一週大事', w: 3, u: T+'223' },
+    { t: '中國南海爭議', w: 2, u: T+'384' },
+    { t: '海纜斷裂', w: 2, u: T+'458' },
+    { t: '2026世足賽', w: 2, u: T+'682' },
+    { t: '封鎖荷姆茲海峽', w: 2, u: T+'646' },
+    { t: '萬里溪堰塞湖', w: 2, u: T+'694' },
+    { t: '中國團促法上路', w: 2, u: T+'707' },
+    { t: '矢板明夫遇襲', w: 2, u: T+'706' },
+    { t: '颱風丹娜絲', w: 2, u: T+'531' },
+    { t: '委內瑞拉強震', w: 2, u: T+'697' },
+    { t: '以哈戰爭', w: 2, u: T+'280' },
+    { t: '基隆準公托涉虐童', w: 2, u: T+'705' },
+    { t: '俄烏停火僵局', w: 2, u: T+'468' },
+    { t: '馬太鞍堰塞湖溢流', w: 2, u: T+'562' },
+    { t: '北市推無菸城市', w: 2, u: T+'665' },
+    { t: '無人載具條例', w: 2, u: T+'687' },
+    { t: '0625豪雨積淹水', w: 2, u: T+'695' },
+    { t: '英相施凱爾請辭', w: 2, u: T+'691' },
+    { t: '事後避孕藥擬納管', w: 2, u: T+'704' },
+    { t: '北捷啟用多元支付', w: 2, u: T+'701' },
+    { t: '2026九合一大選', w: 2, u: T+'619' },
+    { t: '在宅醫療照護', w: 2, u: T+'698' },
+    { t: '醫美診所涉裝針孔', w: 2, u: T+'655' },
+    { t: '國際記者專區', w: 2, u: T+'270' },
+    { t: '金曲37', w: 2, u: T+'696' },
+    { t: '鮮乳標示新制', w: 2, u: T+'700' },
+    { t: '米克拉颱風', w: 2, u: T+'688' }
+  ];
+
+  // 相關關鍵字標籤池（公視真實標籤頁，每個只出現一次）
+  const tags = [
+    { t: '石門水庫', u: G+'3733/' }, { t: '停班課', u: G+'7414/' }, { t: '氣象署', u: G+'30356/' },
+    { t: '苗栗', u: G+'962/' }, { t: '風災', u: G+'9973/' }, { t: '蓄水量', u: G+'20208/' },
+    { t: '荷姆茲海峽', u: G+'38666/' }, { t: '停火協議', u: G+'2762/' }, { t: '原油期貨', u: G+'3944/' },
+    { t: '伊朗', u: G+'910/' }, { t: '空襲', u: G+'3127/' }, { t: '美軍', u: G+'1038/' },
+    { t: '南海仲裁案', u: G+'10132/' }, { t: '太平島', u: G+'8941/' }, { t: '菲律賓', u: G+'315/' },
+    { t: '黃岩島', u: G+'12813/' }, { t: '中國海警', u: G+'32394/' },
+    { t: '食品安全', u: G+'4435/' }, { t: '營養午餐', u: G+'1299/' }, { t: '預防性下架', u: G+'42296/' },
+    { t: '食藥署', u: G+'1245/' }, { t: '大豆沙拉油', u: G+'42273/' },
+    { t: '海底電纜', u: G+'37065/' }, { t: '中華電信', u: G+'800/' },
+    { t: '世足賽', u: G+'12436/' }, { t: '阿根廷', u: G+'783/' }, { t: '英格蘭', u: G+'1381/' },
+    { t: '維德角', u: G+'42032/' }, { t: '哈蘭德', u: G+'42142/' },
+    { t: '堰塞湖', u: G+'33282/' }, { t: '紅色警戒', u: G+'39558/' }, { t: '花蓮', u: G+'266/' },
+    { t: '林保署', u: G+'38108/' }, { t: '撤離', u: G+'3909/' },
+    { t: '跨境鎮壓', u: G+'42266/' }, { t: '陸委會', u: G+'680/' }, { t: '言論自由', u: G+'108/' },
+    { t: '委內瑞拉', u: G+'1178/' }, { t: '強震', u: G+'3494/' }, { t: '聯合國', u: G+'1074/' },
+    { t: '以色列', u: G+'1838/' }, { t: '哈瑪斯', u: G+'20005/' }, { t: '加薩', u: G+'20025/' },
+    { t: '幼兒園', u: G+'56/' }, { t: '教保員', u: G+'28347/' }, { t: '基隆', u: G+'558/' },
+    { t: '俄烏戰爭', u: G+'23497/' }, { t: '澤倫斯基', u: G+'6597/' }, { t: '愛國者飛彈', u: G+'8993/' },
+    { t: '川普', u: G+'86/' },
+    { t: '蔡依林', u: G+'14151/' }, { t: '張震嶽', u: G+'7288/' },
+    { t: '蕭煌奇', u: G+'15122/' }, { t: '落日飛車', u: G+'42239/' },
+    { t: '鮮乳', u: G+'29066/' }, { t: '北捷', u: G+'5935/' }, { t: '悠遊卡', u: G+'1314/' },
+    { t: '事後避孕藥', u: G+'42275/' }, { t: '藥師公會', u: G+'26674/' },
+    { t: '禁菸', u: G+'7901/' }, { t: '西門町', u: G+'6416/' },
+    { t: '無人機', u: G+'3025/' }, { t: '九合一大選', u: G+'1950/' }, { t: '蔣萬安', u: G+'9205/' },
+    { t: '米克拉', u: G+'935/' }, { t: '曾文水庫', u: G+'6695/' }, { t: '熱浪', u: G+'2699/' },
+    { t: '淹水', u: G+'937/' }, { t: '洩洪', u: G+'2547/' }, { t: '梅雨鋒面', u: G+'4894/' },
+    { t: '豪雨', u: G+'2679/' }, { t: '颱風警報', u: G+'1578/' }, { t: '國防', u: G+'22696/' },
+    { t: '南海', u: G+'2962/' }, { t: '外交部', u: G+'198/' }, { t: '衛福部', u: G+'538/' },
+    { t: '致癌物', u: G+'5339/' }, { t: '超標', u: G+'288/' }, { t: '香港', u: G+'134/' },
+    { t: '護理人力', u: G+'37784/' }, { t: '居家化療', u: G+'34960/' }, { t: '健保', u: G+'2998/' },
+    { t: '針孔偷拍', u: G+'41717/' }, { t: '愛爾麗', u: G+'41701/' }, { t: '醫美', u: G+'3017/' },
+    { t: '工黨', u: G+'4888/' }, { t: '英國首相', u: G+'50/' }, { t: '移工', u: G+'1640/' },
+    { t: '泰國', u: G+'1343/' }, { t: '柬埔寨', u: G+'8863/' }, { t: '酪農', u: G+'31448/' },
+    { t: '標章', u: G+'18392/' }, { t: '行動支付', u: G+'569/' }, { t: '公投', u: G+'1943/' },
+    { t: '鞭刑公投', u: G+'42228/' }, { t: '重啟核電', u: G+'40474/' }, { t: '苯駢芘', u: G+'42321/' },
+    { t: '梅西', u: G+'26366/' }, { t: '西藏', u: G+'2100/' }, { t: '黑名單', u: G+'4898/' },
+    { t: '低軌衛星', u: G+'4708/' }, { t: 'SpaceX', u: G+'2179/' }, { t: '灰色地帶', u: G+'25534/' }
+  ];
+
+  const shades = ['#007CFF', '#007CFF', '#007CFF', '#007CFF'];
+  const placed = [];
+  const meas = document.createElement('canvas').getContext('2d');
+  let seed = 404;
+
+  function rand() {
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    return seed / 4294967296;
+  }
+
+  function overlaps(x, y, bw, bh) {
+    for (const p of placed) {
+      if (Math.abs(x - p.x) < (bw + p.w) / 2 + 2 && Math.abs(y - p.y) < (bh + p.h) / 2 + 1) return true;
+    }
+    return false;
+  }
+
+  function tryPlace(text, fs, weightCss, color, url, tries) {
+    meas.font = weightCss + ' ' + fs + 'px sans-serif';
+    const bw = meas.measureText(text).width + 2;
+    const bh = fs * 1.15;
+    for (let attempt = 0; attempt < tries; attempt++) {
+      const x = bw/2 + rand() * (W - bw);
+      const y = bh/2 + rand() * (H - bh);
+      if (!boxInside(x, y, bw, bh) || overlaps(x, y, bw, bh)) continue;
+      placed.push({ x, y, w: bw, h: bh });
+      const a = document.createElement('a');
+      a.textContent = text;
+      a.href = url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.style.cssText = 'position:absolute; left:' + x + 'px; top:' + y + 'px; transform:translate(-50%,-50%); font-size:' + fs + 'px; font-weight:' + weightCss + '; color:' + color + '; white-space:nowrap; text-decoration:none; line-height:1;';
+      a.onmouseenter = () => { a.style.textDecoration = 'underline'; };
+      a.onmouseleave = () => { a.style.textDecoration = 'none'; };
+      wrap.appendChild(a);
+      return true;
+    }
+    return false;
+  }
+
+  const scale = W / 680;
+  const bigFs = Math.max(15, Math.round(23 * scale));
+  const midFs = Math.max(12, Math.round(15.5 * scale));
+
+  // 第一層：30 個議題標題，各一次（塞不下會自動縮小一級再試）
+  topics.forEach((k) => {
+    const fs = k.w >= 3 ? bigFs : midFs;
+    const shade = k.w >= 3 ? shades[0] : shades[1];
+    if (!tryPlace(k.t, fs, k.w >= 3 ? '700' : '500', shade, k.u, 2500)) {
+      tryPlace(k.t, Math.round(fs * 0.8), '500', shades[1], k.u, 2500);
+    }
+  });
+
+  // 第二層：關鍵字標籤（不重複），洗牌後由中字到小字填滿
+  const pool = tags.slice();
+  for (let i = pool.length - 1; i > 0; i--) {
+    const j = Math.floor(rand() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  const fillSizes = [Math.max(10, Math.round(12 * scale)), Math.max(9, Math.round(10.5 * scale)), Math.max(8, Math.round(9 * scale)), 8];
+  pool.forEach((k) => {
+    for (const fs of fillSizes) {
+      const shade = fs >= fillSizes[1] ? shades[2] : shades[3];
+      if (tryPlace(k.t, fs, '400', shade, k.u, 900)) return;
+    }
+  });
+});
+</script>

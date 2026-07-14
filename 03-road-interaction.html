@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>公視新聞 404 此路不通</title>
+  <style>
+    :root {
+      --blue: #007CFF;
+      --red: #FF1616;
+      --deep-blue: #0046A8;
+      --light-blue: #0B85FF;
+      --black: #111111;
+      --gray: #E5E5E5;
+      --page-bg: #F7F7F7;
+      --rail: 47px;
+      --block-left: 0px;
+      --block-top: 344px;
+      font-family: Roboto, "Noto Sans TC", "Noto Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--page-bg);
+      color: var(--black);
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .viewport {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      background: var(--page-bg);
+    }
+
+    .artboard {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1470px;
+      height: 1370px;
+      transform-origin: 0 0;
+      background: var(--page-bg);
+    }
+
+    .header-shot {
+      position: absolute;
+      left: 123px;
+      top: 0;
+      width: 1224px;
+      height: 168px;
+      display: block;
+      object-fit: contain;
+      object-position: left top;
+    }
+
+    .footer-shot {
+      position: absolute;
+      left: 0;
+      top: 632px;
+      width: 1470px;
+      height: 520px;
+      display: block;
+      object-fit: cover;
+      object-position: left top;
+      transform: translateY(var(--footer-shift, 0px));
+    }
+
+    .message {
+      position: absolute;
+      left: 0;
+      top: 258px;
+      width: 1470px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      z-index: 3;
+    }
+
+    .message h1 {
+      position: relative;
+      margin: 0;
+      width: 360px;
+      height: 29px;
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .title-line {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: titleSwap 5.2s infinite;
+    }
+
+    .title-line:nth-child(2) {
+      animation-delay: 2.6s;
+    }
+
+    @keyframes titleSwap {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      10%,
+      42% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      50%,
+      100% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+    }
+
+    .assist {
+      display: grid;
+      grid-template-columns: 128px 212px 128px;
+      align-items: center;
+      column-gap: 20px;
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+
+    .assist > span:first-child {
+      text-align: right;
+    }
+
+    .assist > span:last-child {
+      text-align: left;
+    }
+
+    .search {
+      position: relative;
+      width: 212px;
+      height: 44px;
+    }
+
+    .search input {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #d4d4d4;
+      border-radius: 999px;
+      background: transparent;
+      padding: 0 48px 0 20px;
+      color: #171717;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search input::placeholder {
+      color: #a1a1a1;
+      font-weight: 700;
+    }
+
+    .search svg {
+      position: absolute;
+      right: 18px;
+      top: 12px;
+      width: 20px;
+      height: 20px;
+      stroke: #5c5c5c;
+    }
+
+    .home-link {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .hamburger {
+      position: absolute;
+      left: 133px;
+      top: 57px;
+      width: 14px;
+      height: 14px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .hamburger span {
+      width: 14px;
+      height: 2px;
+      background: #777;
+    }
+
+    .brand {
+      position: absolute;
+      left: 203px;
+      top: 52px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 39px;
+      height: 39px;
+      display: block;
+      flex: 0 0 auto;
+    }
+
+    .brand-text {
+      font-size: 31px;
+      line-height: 1;
+      font-weight: 900;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .primary-nav {
+      position: absolute;
+      left: 395px;
+      top: 57px;
+      display: flex;
+      align-items: center;
+      gap: 22px;
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .primary-nav a::after,
+    .language::after {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      margin-left: 8px;
+      border-right: 1.5px solid currentColor;
+      border-bottom: 1.5px solid currentColor;
+      transform: translateY(-3px) rotate(45deg);
+    }
+
+    .language {
+      position: absolute;
+      left: 1025px;
+      top: 57px;
+      font-size: 16px;
+      line-height: 1;
+      color: #555;
+    }
+
+    .login {
+      position: absolute;
+      left: 1104px;
+      top: 56px;
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 800;
+      color: var(--blue);
+      white-space: nowrap;
+    }
+
+    .account {
+      position: absolute;
+      left: 1311px;
+      top: 44px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--blue);
+      color: #fff;
+      display: grid;
+      place-items: center;
+    }
+
+    .account svg {
+      width: 19px;
+      height: 19px;
+      fill: currentColor;
+    }
+
+    .hot-line {
+      position: absolute;
+      left: 394px;
+      top: 88px;
+      width: 682px;
+      height: 1px;
+      background: #D7D7D7;
+    }
+
+    .hot-row {
+      position: absolute;
+      left: 399px;
+      top: 105px;
+      display: flex;
+      gap: 30px;
+      font-size: 16px;
+      line-height: 1;
+      font-weight: 800;
+      color: var(--blue);
+      white-space: nowrap;
+    }
+
+    .hamburger,
+    .brand,
+    .primary-nav,
+    .language,
+    .login,
+    .account,
+    .hot-line,
+    .hot-row {
+      display: none;
+    }
+
+    .road-left {
+      position: absolute;
+      left: var(--block-left);
+      top: var(--block-top);
+      width: 470px;
+      height: var(--rail);
+      overflow: hidden;
+      background: var(--blue);
+      z-index: 1;
+    }
+
+    .headline {
+      position: absolute;
+      left: 50%;
+      top: var(--block-top);
+      transform: translateX(-50%);
+      margin: 0;
+      width: max-content;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 36px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .headline span {
+      display: inline-block;
+    }
+
+    .home-btn,
+    .topic-btn {
+      position: absolute;
+      appearance: none;
+      border: 0;
+      background: var(--blue);
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      line-height: 22.4px;
+      font-weight: 700;
+      text-align: left;
+      padding: 0 16px;
+      white-space: nowrap;
+    }
+
+    .home-btn {
+      left: calc(var(--block-left) + 1000px);
+      top: var(--block-top);
+      width: 124px;
+      height: var(--rail);
+    }
+
+    .topic-road {
+      position: absolute;
+      left: calc(var(--block-left) + 1124px);
+      top: calc(var(--block-top) + 64px);
+      width: 346px;
+      height: var(--rail);
+      background: var(--blue);
+      transform-origin: left center;
+      transform: scaleX(0);
+    }
+
+    .topic-ball-mask {
+      position: absolute;
+      left: calc(var(--block-left) + 1124px);
+      top: calc(var(--block-top) + 64px);
+      width: 346px;
+      height: var(--rail);
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .topic-btn {
+      left: calc(var(--block-left) + 1000px);
+      top: calc(var(--block-top) + 64px);
+      width: 124px;
+      height: var(--rail);
+      z-index: 2;
+    }
+
+    .main-ball {
+      position: absolute;
+      left: calc(var(--block-left) + 423px);
+      top: var(--block-top);
+      width: var(--rail);
+      height: var(--rail);
+      border-radius: 50%;
+      background: var(--red);
+      transform-origin: center center;
+      z-index: 3;
+      opacity: 0;
+    }
+
+    .road-ball {
+      position: absolute;
+      width: var(--rail);
+      height: var(--rail);
+      border-radius: 50%;
+      background: var(--red);
+      transform-origin: center center;
+      pointer-events: none;
+    }
+
+    .top-mask-ball {
+      left: 423px;
+      top: 0;
+      opacity: 1;
+    }
+
+    .topic-mask-ball {
+      left: calc(var(--rail) * -1);
+      top: 0;
+      opacity: 0;
+    }
+
+    .page.is-home .main-ball {
+      opacity: 1;
+      animation: roll-home 260ms linear forwards;
+    }
+
+    .page.is-home .top-mask-ball {
+      opacity: 0;
+    }
+
+    .page.is-topic .topic-road {
+      animation: topic-road-grow 220ms 90ms linear forwards;
+    }
+
+    .page.is-topic .main-ball {
+      opacity: 0;
+      animation: none;
+    }
+
+    .page.is-topic .top-mask-ball {
+      opacity: 1;
+      animation: top-ball-mask-drop 90ms linear forwards;
+    }
+
+    .page.is-topic .topic-mask-ball {
+      opacity: 1;
+      animation: topic-ball-mask-roll 260ms 90ms linear forwards;
+    }
+
+    .page.is-resetting .main-ball {
+      animation: none;
+    }
+
+    @keyframes roll-home {
+      from {
+        left: calc(var(--block-left) + 423px);
+        transform: rotate(0deg);
+      }
+      to {
+        left: calc(var(--block-left) - 140px);
+        transform: rotate(-900deg);
+      }
+    }
+
+    @keyframes top-ball-mask-drop {
+      from {
+        top: 0;
+        transform: rotate(0deg);
+      }
+      to {
+        top: var(--rail);
+        transform: rotate(0deg);
+      }
+    }
+
+    @keyframes topic-ball-mask-roll {
+      0% {
+        left: calc(var(--rail) * -1);
+        top: 0;
+        transform: rotate(0deg);
+      }
+      80.77% {
+        left: 299px;
+        top: 0;
+        transform: rotate(760deg);
+      }
+      to {
+        left: 386px;
+        top: 0;
+        transform: rotate(980deg);
+      }
+    }
+
+    @keyframes topic-road-grow {
+      from {
+        transform: scaleX(0);
+      }
+      to {
+        transform: scaleX(1);
+      }
+    }
+
+    .social-row {
+      position: absolute;
+      left: 123px;
+      top: 929px;
+      transform: translateY(var(--footer-shift, 0px));
+      display: flex;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .social-brand {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-right: 30px;
+    }
+
+    .social-brand .brand-logo {
+      width: 27px;
+      height: 27px;
+    }
+
+    .social-brand span {
+      font-size: 25px;
+      line-height: 1;
+      font-weight: 900;
+    }
+
+    .social-link {
+      width: 20px;
+      height: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #767676;
+      font-size: 17px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .footer {
+      position: absolute;
+      left: 0;
+      top: 989px;
+      width: 1470px;
+      height: 284px;
+      transform: translateY(var(--footer-shift, 0px));
+      overflow: hidden;
+      background: var(--gray);
+    }
+
+    .footer-col {
+      position: absolute;
+      top: 46px;
+      display: flex;
+      flex-direction: column;
+      color: #707070;
+      font-size: 17px;
+      line-height: 1.86;
+    }
+
+    .footer-col.one { left: 123px; }
+    .footer-col.two { left: 247px; }
+    .footer-col.three { left: 343px; }
+
+    .footer-group {
+      position: absolute;
+      left: 467px;
+      top: 46px;
+      color: #707070;
+      font-size: 17px;
+      line-height: 1.86;
+    }
+
+    .footer-group strong {
+      display: block;
+      color: #626262;
+      font-weight: 900;
+      margin-bottom: 5px;
+    }
+
+    .footer-group p {
+      margin: 0 0 18px;
+    }
+
+    .footer-art {
+      position: absolute;
+      left: 988px;
+      top: 827px;
+      width: 520px;
+      height: 320px;
+      transform: translateY(var(--footer-shift, 0px));
+      pointer-events: none;
+    }
+
+    .footer-art .bar {
+      position: absolute;
+      left: 0;
+      width: 525px;
+      height: 92px;
+      transform: skewY(-22deg);
+      transform-origin: right center;
+    }
+
+    .footer-art .deep {
+      top: 194px;
+      background: var(--deep-blue);
+    }
+
+    .footer-art .light {
+      top: 258px;
+      background: var(--light-blue);
+    }
+
+    .footer-art .dot {
+      position: absolute;
+      left: 82px;
+      top: 156px;
+      width: 252px;
+      height: 252px;
+      border-radius: 50%;
+      background: var(--red);
+    }
+
+    .legal {
+      position: absolute;
+      left: 123px;
+      top: 1303px;
+      transform: translateY(var(--footer-shift, 0px));
+      color: #9a9a9a;
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .hamburger,
+    .brand,
+    .primary-nav,
+    .language,
+    .login,
+    .account,
+    .hot-line,
+    .hot-row,
+    .social-row,
+    .footer,
+    .footer-art,
+    .legal {
+      display: none;
+    }
+
+    @media (max-width: 760px) {
+      .primary-nav,
+      .language,
+      .login,
+      .account {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="viewport" id="viewport">
+    <div class="artboard page" id="page">
+      <img class="header-shot" src="https://www.figma.com/api/mcp/asset/dc74ccf1-f051-4568-9a5e-69e05a6265fc" alt="">
+      <span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span>
+      <a class="brand" href="https://news.pts.org.tw/">
+        <svg class="brand-logo" viewBox="0 0 40 40" aria-hidden="true">
+          <path fill="#007CFF" d="M0 0h12v40H0z"/>
+          <path fill="#007CFF" fill-rule="evenodd" d="M12 0h9a19 19 0 1 1 0 38h-9V26h9a7 7 0 1 0 0-14h-9z" clip-rule="evenodd"/>
+          <circle cx="25" cy="19" r="9" fill="#FF1616"/>
+        </svg>
+        <span class="brand-text">公視新聞</span>
+      </a>
+      <nav class="primary-nav" aria-label="主選單">
+        <a href="#">國際</a>
+        <a href="#">政治</a>
+        <a href="#">社會</a>
+        <a href="#">環境</a>
+        <a href="#">生活</a>
+        <a href="#">社福人權</a>
+        <a href="#">深度報導</a>
+        <a href="#">影音</a>
+      </nav>
+      <span class="language">中文</span>
+      <a class="login" href="#">登入登入登入登入登入登入</a>
+      <span class="account" aria-hidden="true">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0z"/></svg>
+      </span>
+      <span class="hot-line" aria-hidden="true"></span>
+      <div class="hot-row">
+        <a href="#"># 高鐵大誤點</a>
+        <a href="#"># 2026九合一大選</a>
+      </div>
+
+      <span class="road-left" aria-hidden="true">
+        <span class="road-ball top-mask-ball"></span>
+      </span>
+      <h1 class="headline"><span>404</span><span>not found</span><span>此路不通！</span></h1>
+      <button class="home-btn" type="button" id="homeBtn">← 回到首頁</button>
+      <span class="topic-road" aria-hidden="true"></span>
+      <span class="topic-ball-mask" aria-hidden="true">
+        <span class="road-ball topic-mask-ball"></span>
+      </span>
+      <button class="topic-btn" type="button" id="topicBtn">熱門議題 →</button>
+      <span class="main-ball" aria-hidden="true"></span>
+
+      <div class="social-row">
+        <a class="social-brand" href="https://news.pts.org.tw/">
+          <svg class="brand-logo" viewBox="0 0 40 40" aria-hidden="true">
+            <path fill="#007CFF" d="M0 0h12v40H0z"/>
+            <path fill="#007CFF" fill-rule="evenodd" d="M12 0h9a19 19 0 1 1 0 38h-9V26h9a7 7 0 1 0 0-14h-9z" clip-rule="evenodd"/>
+            <circle cx="25" cy="19" r="9" fill="#FF1616"/>
+          </svg>
+          <span>公視新聞</span>
+        </a>
+        <a class="social-link" href="#" aria-label="Facebook">f</a>
+        <a class="social-link" href="#" aria-label="Instagram">◎</a>
+        <a class="social-link" href="#" aria-label="Threads">@</a>
+        <a class="social-link" href="#" aria-label="YouTube">▶</a>
+        <a class="social-link" href="#" aria-label="Telegram">↗</a>
+        <a class="social-link" href="#" aria-label="RSS">rss</a>
+      </div>
+
+      <footer class="footer">
+        <nav class="footer-col one" aria-label="分類">
+          <a href="#">國際</a>
+          <a href="#">政治</a>
+          <a href="#">社會</a>
+          <a href="#">環境</a>
+          <a href="#">生活</a>
+          <a href="#">社福人權</a>
+        </nav>
+        <nav class="footer-col two" aria-label="服務">
+          <a href="#">Live正發生</a>
+          <a href="#">深度專題</a>
+          <a href="#">觀點</a>
+          <a href="#">副刊</a>
+          <a href="#">熱門議題</a>
+          <a href="#">新聞小百科</a>
+        </nav>
+        <nav class="footer-col three" aria-label="影音">
+          <a href="#">影音</a>
+          <a href="#">Podcast</a>
+          <a href="#">節目</a>
+        </nav>
+        <div class="footer-group">
+          <strong>公廣集團</strong>
+          <p>公共電視　PTS TW　公視台語台<br>客家電視台　中華電信公司　Taiwan+</p>
+          <strong>主題網站</strong>
+          <p>我們的島　獨立特派員　公視新聞實驗室<br>PNN新聞議題中心</p>
+        </div>
+      </footer>
+      <div class="footer-art" aria-hidden="true">
+        <span class="bar deep"></span>
+        <span class="bar light"></span>
+        <span class="dot"></span>
+      </div>
+      <div class="legal">
+        <div>關於我們　更正啟事　最新消息　服務條款　隱私權保護政策</div>
+        <div>Copyright © 2020 Public Television Service Foundation. All Rights Reserved.</div>
+      </div>
+      <img class="footer-shot" src="https://www.figma.com/api/mcp/asset/720911ed-1e2d-4471-8d44-7b6af569d229" alt="">
+    </div>
+  </div>
+  <script>
+    const DESIGN_WIDTH = 1470;
+    const FOOTER_HEIGHT = 520;
+    const FOOTER_START = 632;
+    const BLOCK_HEIGHT = 304;
+    const viewport = document.getElementById("viewport");
+    const page = document.getElementById("page");
+    const homeBtn = document.getElementById("homeBtn");
+    const topicBtn = document.getElementById("topicBtn");
+    const routes = {
+      home: {
+        url: "https://news.pts.org.tw/",
+        delay: 280,
+      },
+      topic: {
+        url: "https://news.pts.org.tw/hotTopic",
+        delay: 380,
+      },
+    };
+    let isLeaving = false;
+
+    function fitArtboard() {
+      const scale = window.innerWidth / DESIGN_WIDTH;
+      const visibleDesignHeight = window.innerHeight / scale;
+      const blockTop = (visibleDesignHeight - BLOCK_HEIGHT) / 2 + 96;
+      const footerShift = visibleDesignHeight - FOOTER_START;
+      page.style.transform = `scale(${scale})`;
+      page.style.setProperty("--block-left", "0px");
+      page.style.setProperty("--block-top", `${blockTop}px`);
+      page.style.setProperty("--footer-shift", `${footerShift}px`);
+      viewport.style.height = `${(FOOTER_START + footerShift + FOOTER_HEIGHT) * scale}px`;
+    }
+
+    function chooseRoute(route) {
+      if (isLeaving) return;
+      isLeaving = true;
+      page.classList.remove("is-home", "is-topic", "is-resetting");
+      page.classList.add("is-resetting");
+      window.requestAnimationFrame(() => {
+        page.classList.remove("is-resetting");
+        page.classList.add(route === "home" ? "is-home" : "is-topic");
+      });
+      window.setTimeout(() => {
+        window.location.href = routes[route].url;
+      }, routes[route].delay);
+    }
+
+    window.addEventListener("resize", fitArtboard);
+    homeBtn.addEventListener("click", () => chooseRoute("home"));
+    topicBtn.addEventListener("click", () => chooseRoute("topic"));
+    fitArtboard();
+  </script>
+</body>
+</html>

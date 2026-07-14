@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PTS 404 Wordcloud Hashtags Tidy</title>
+  <style>
+    :root {
+      --blue: #007cff;
+      --blue-hover: #5ab1ff;
+      --muted: #6f7a86;
+      --bg: #F5F5F5;
+      font-family: Roboto, "Noto Sans TC", "Noto Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+      background: var(--bg);
+      color: var(--blue);
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    input {
+      font: inherit;
+    }
+
+    .viewport {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: var(--bg);
+    }
+
+    .artboard {
+      position: relative;
+      width: 1470px;
+      min-height: 1260px;
+      transform-origin: 0 0;
+      background: var(--bg);
+    }
+
+    .header-shot {
+      position: absolute;
+      left: 123px;
+      top: 0;
+      width: 1224px;
+      height: 168px;
+      display: block;
+      object-fit: contain;
+      object-position: left top;
+    }
+
+    .message {
+      position: absolute;
+      left: 0;
+      top: 258px;
+      width: 1470px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      z-index: 3;
+    }
+
+    .message h1 {
+      position: relative;
+      margin: 0;
+      width: 360px;
+      height: 29px;
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-align: center;
+      overflow: hidden;
+      color: #171717;
+    }
+
+    .title-line {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: titleSwap 5.2s infinite;
+    }
+
+    .title-line:nth-child(2) {
+      animation-delay: 2.6s;
+    }
+
+    @keyframes titleSwap {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      10%,
+      42% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      50%,
+      100% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+    }
+
+    .assist {
+      display: grid;
+      grid-template-columns: 128px 212px 128px;
+      align-items: center;
+      column-gap: 20px;
+      color: #171717;
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 500;
+    }
+
+    .assist > span:first-child {
+      text-align: right;
+    }
+
+    .assist > span:last-child {
+      text-align: left;
+    }
+
+    .search {
+      position: relative;
+      width: 212px;
+      height: 44px;
+    }
+
+    .search input {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #d4d4d4;
+      border-radius: 999px;
+      background: transparent;
+      padding: 0 48px 0 20px;
+      color: #171717;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search input::placeholder {
+      color: #a1a1a1;
+      font-weight: 700;
+    }
+
+    .search svg {
+      position: absolute;
+      right: 18px;
+      top: 12px;
+      width: 20px;
+      height: 20px;
+      stroke: #5c5c5c;
+    }
+
+    .home-link {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .proposal {
+      position: absolute;
+      left: 123px;
+      top: 248px;
+      width: 1224px;
+      display: grid;
+      grid-template-columns: 276px 820px;
+      column-gap: 96px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .proposal-copy {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 40px;
+      transform: translateY(-64px);
+    }
+
+    .proposal-title {
+      margin: 0;
+      color: var(--blue);
+      font-size: 30px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .search-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      width: 276px;
+    }
+
+    .search-label,
+    .explore-link {
+      margin: 0;
+      color: #171717;
+      font-size: 18px;
+      line-height: 1.4;
+      font-weight: 700;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .wordcloud-panel {
+      width: 820px;
+      height: 520px;
+      overflow: hidden;
+      mix-blend-mode: multiply;
+    }
+
+    .wordcloud-frame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: transparent;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .footer-shot {
+      position: absolute;
+      left: 0;
+      top: 856px;
+      width: 1470px;
+      height: 520px;
+      display: block;
+      object-fit: cover;
+      object-position: left top;
+    }
+  </style>
+</head>
+<body>
+  <div class="viewport" id="viewport">
+    <main class="artboard" id="page">
+      <img class="header-shot" src="https://www.figma.com/api/mcp/asset/dc74ccf1-f051-4568-9a5e-69e05a6265fc" alt="">
+
+      <section class="proposal" aria-labelledby="title">
+        <div class="proposal-copy">
+          <h1 class="proposal-title" id="title">很抱歉，找不到頁面</h1>
+          <form class="search-group" action="https://news.pts.org.tw/search" method="get">
+            <p class="search-label">輸入關鍵字</p>
+            <div class="search">
+              <input type="search" name="q" placeholder="搜尋" aria-label="搜尋">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <circle cx="11" cy="11" r="6.5" stroke-width="2"></circle>
+                <path d="m16 16 4 4" stroke-width="2" stroke-linecap="round"></path>
+              </svg>
+            </div>
+          </form>
+          <a class="explore-link" href="https://news.pts.org.tw/hotTopic">或點擊熱門議題／標籤探索更多 →</a>
+        </div>
+        <div class="wordcloud-panel" aria-label="公視新聞熱門議題 404 文字雲">
+          <iframe class="wordcloud-frame" src="pts_404_wordcloud_30_topics_plus_tags.html" title="由熱門議題與關鍵字排列成的 404"></iframe>
+        </div>
+      </section>
+
+      <img class="footer-shot" src="https://www.figma.com/api/mcp/asset/720911ed-1e2d-4471-8d44-7b6af569d229" alt="">
+    </main>
+  </div>
+
+  <script>
+    const DESIGN_WIDTH = 1470;
+    const page = document.getElementById("page");
+    const viewport = document.getElementById("viewport");
+
+    function fitArtboard() {
+      const scale = window.innerWidth / DESIGN_WIDTH;
+      page.style.transform = `scale(${scale})`;
+      viewport.style.height = `${page.offsetHeight * scale}px`;
+    }
+
+    window.addEventListener("resize", fitArtboard);
+    fitArtboard();
+  </script>
+</body>
+</html>
