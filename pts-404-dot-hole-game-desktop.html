@@ -1,0 +1,954 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>公視新聞 404 跳過空隙</title>
+  <style>
+    :root {
+      --blue: #007CFF;
+      --hole: #0046A8;
+      --red: #FF1616;
+      --black: #171717;
+      --page-bg: #F5F5F5;
+      font-family: Roboto, "Noto Sans TC", "Noto Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--page-bg);
+      color: var(--black);
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .viewport {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: var(--page-bg);
+    }
+
+    .artboard {
+      position: relative;
+      width: 1470px;
+      min-height: 1340px;
+      transform-origin: 0 0;
+      background: var(--page-bg);
+    }
+
+    .header-shot {
+      position: absolute;
+      left: 123px;
+      top: 0;
+      width: 1224px;
+      height: 168px;
+      display: block;
+      object-fit: contain;
+      object-position: left top;
+    }
+
+    .mobile-header,
+    .mobile-footer {
+      display: none;
+    }
+
+    .message {
+      position: absolute;
+      left: 0;
+      top: 258px;
+      width: 1470px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      z-index: 3;
+    }
+
+    .message h1 {
+      position: relative;
+      margin: 0;
+      width: 360px;
+      height: 29px;
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .title-line {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: titleSwap 3.6s infinite;
+    }
+
+    .title-line:nth-child(2) {
+      animation-delay: 1.8s;
+    }
+
+    @keyframes titleSwap {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      10%,
+      42% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      50%,
+      100% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+    }
+
+    .assist {
+      display: grid;
+      grid-template-columns: 128px 212px 128px;
+      align-items: center;
+      column-gap: 20px;
+      font-size: 16px;
+      line-height: 22.4px;
+      font-weight: 500;
+    }
+
+    .assist > span:first-child {
+      text-align: right;
+    }
+
+    .assist > span:last-child {
+      text-align: left;
+    }
+
+    .search {
+      position: relative;
+      width: 212px;
+      height: 44px;
+    }
+
+    .search input {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #d4d4d4;
+      border-radius: 999px;
+      background: transparent;
+      padding: 0 48px 0 20px;
+      color: #171717;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search input::placeholder {
+      color: #a1a1a1;
+      font-weight: 700;
+    }
+
+    .search svg {
+      position: absolute;
+      right: 18px;
+      top: 12px;
+      width: 20px;
+      height: 20px;
+      stroke: #5c5c5c;
+    }
+
+    .home-link {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .game-hint {
+      position: absolute;
+      left: 0;
+      top: 448px;
+      width: 1470px;
+      color: #737373;
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 400;
+      text-align: center;
+      letter-spacing: 0;
+      z-index: 4;
+    }
+
+    .game-hint .keycap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 18px;
+      margin: 0 4px;
+      padding: 0 6px;
+      border: 1px solid var(--blue);
+      border-radius: 0;
+      background: transparent;
+      color: var(--blue);
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 700;
+      vertical-align: 1px;
+    }
+
+    .game-score {
+      position: absolute;
+      left: 0;
+      top: 474px;
+      width: 1470px;
+      color: #737373;
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 400;
+      text-align: center;
+      letter-spacing: 0;
+      z-index: 4;
+    }
+
+    .game-score .best {
+      color: #a1a1a1;
+      margin-right: 16px;
+    }
+
+    .game-score .current {
+      color: #737373;
+    }
+
+    .game {
+      position: absolute;
+      left: 0;
+      top: 350px;
+      width: 1470px;
+      height: 470px;
+      overflow: hidden;
+      background: var(--page-bg);
+      user-select: none;
+    }
+
+    .game-canvas {
+      position: absolute;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .footer-shot {
+      position: absolute;
+      left: 0;
+      top: 820px;
+      width: 1470px;
+      height: 520px;
+      display: block;
+      object-fit: cover;
+      object-position: left top;
+    }
+
+    @media (max-width: 767px) {
+      .artboard {
+        width: 320px;
+        min-height: calc(var(--screen-design-height, 700px) + 642px);
+      }
+
+      .header-shot,
+      .footer-shot {
+        display: none;
+      }
+
+      .mobile-header {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        width: 320px;
+        padding: 20px 24px 0;
+        flex-direction: column;
+        gap: 44px;
+        background: var(--page-bg);
+        z-index: 5;
+      }
+
+      .mobile-header-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 272px;
+      }
+
+      .mobile-logo {
+        display: block;
+        width: 168px;
+        height: 38px;
+        object-fit: contain;
+      }
+
+      .mobile-lang {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: #737373;
+        font-size: 14px;
+        line-height: 1.7;
+        font-weight: 400;
+      }
+
+      .mobile-tabs {
+        display: flex;
+        width: 272px;
+        height: 40px;
+        overflow: hidden;
+        border-bottom: 1px solid #d4d4d4;
+        color: #171717;
+        font-size: 16px;
+        line-height: 22.4px;
+        font-weight: 400;
+        white-space: nowrap;
+      }
+
+      .mobile-tabs span {
+        flex: 0 0 auto;
+        padding: 8px;
+      }
+
+      .mobile-tabs span:first-child {
+        color: var(--blue);
+        border-bottom: 2px solid var(--blue);
+      }
+
+      .mobile-hot-topics {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        color: var(--blue);
+        font-size: 14px;
+        line-height: 1.7;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .message {
+        top: 176px;
+        width: 320px;
+        gap: 24px;
+      }
+
+      .message h1 {
+        width: 320px;
+      }
+
+      .assist {
+        grid-template-columns: 68px 150px 78px;
+        column-gap: 8px;
+        font-size: 16px;
+        line-height: 22.4px;
+      }
+
+      .search {
+        width: 150px;
+      }
+
+      .search input {
+        padding: 0 42px 0 20px;
+      }
+
+      .game-hint {
+        top: 312px;
+        width: 320px;
+      }
+
+      .game-score {
+        top: 336px;
+        width: 320px;
+      }
+
+      .game {
+        top: 352px;
+        width: 320px;
+        height: calc(var(--screen-design-height, 700px) - 352px);
+        min-height: 280px;
+      }
+
+      .game-canvas {
+        top: auto;
+        right: auto;
+        bottom: 0;
+        left: 0;
+        width: 1470px;
+        height: 470px;
+      }
+
+      .mobile-footer {
+        position: absolute;
+        left: 0;
+        top: var(--screen-design-height, 700px);
+        display: flex;
+        width: 320px;
+        flex-direction: column;
+        background: var(--page-bg);
+      }
+
+      .mobile-footer-brand {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 40px 24px 16px;
+      }
+
+      .mobile-footer-logo {
+        width: 124px;
+        height: 28px;
+      }
+
+      .mobile-socials {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .mobile-socials img {
+        width: 24px;
+        height: 24px;
+        padding: 4px;
+        box-sizing: content-box;
+        opacity: 0.72;
+      }
+
+      .mobile-footer-index {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 44px;
+        min-height: 382px;
+        padding: 44px 24px;
+        overflow: hidden;
+        background: #e5e5e5;
+        color: #737373;
+        font-size: 16px;
+        line-height: 22.4px;
+        font-weight: 400;
+      }
+
+      .mobile-footer-links {
+        display: flex;
+        gap: 44px;
+        align-items: flex-start;
+      }
+
+      .mobile-footer-links ul,
+      .mobile-footer-groups ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .mobile-footer-links li {
+        margin-bottom: 8px;
+      }
+
+      .mobile-footer-link-pair {
+        display: flex;
+        gap: 16px;
+      }
+
+      .mobile-footer-groups {
+        display: flex;
+        flex-direction: column;
+        gap: 44px;
+      }
+
+      .mobile-footer-groups h2 {
+        margin: 0 0 8px;
+        color: #737373;
+        font-size: 16px;
+        line-height: 22.4px;
+        font-weight: 700;
+      }
+
+      .mobile-footer-groups ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 12px;
+      }
+
+      .mobile-footer-graphic {
+        align-self: flex-end;
+        width: 206px;
+        height: 133px;
+        margin-top: -84px;
+        object-fit: contain;
+      }
+
+      .mobile-footer-details {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 24px;
+        color: #a1a1a1;
+        font-size: 14px;
+        line-height: 1.7;
+        font-weight: 400;
+      }
+
+      .mobile-footer-details nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="viewport" id="viewport">
+    <main class="artboard" id="page">
+      <img class="header-shot" src="https://www.figma.com/api/mcp/asset/dc74ccf1-f051-4568-9a5e-69e05a6265fc" alt="">
+
+      <header class="mobile-header" aria-label="公視新聞手機版導覽">
+        <div class="mobile-header-top">
+          <img class="mobile-logo" src="https://www.figma.com/api/mcp/asset/1b3899c1-f7f3-4c90-a35b-e26f8d163ffa" alt="公視新聞">
+          <div class="mobile-lang">中文⌄</div>
+        </div>
+        <div>
+          <nav class="mobile-tabs" aria-label="分類">
+            <span>示意內容</span><span>示意內容</span><span>示意內容</span><span>示意內容</span><span>示意內容</span>
+          </nav>
+          <div class="mobile-hot-topics">
+            <span># 高鐵大誤點</span>
+            <span># 2026九合一大選</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="message" aria-labelledby="title">
+        <h1 id="title">
+          <span class="title-line">很抱歉，網頁不存在</span>
+          <span class="title-line">404 not found</span>
+        </h1>
+        <div class="assist">
+          <span>輸入關鍵字</span>
+          <form class="search" action="https://news.pts.org.tw/search" method="get">
+            <input type="search" name="q" placeholder="搜尋" aria-label="搜尋">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5" stroke-width="2"></circle>
+              <path d="m16 16 4 4" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+          </form>
+          <span>或回到 <a class="home-link" href="https://news.pts.org.tw/">首頁</a></span>
+        </div>
+      </section>
+
+      <div class="game-hint" id="gameHint">新聞很多，休息一下！按 <span class="keycap">Space</span> 開始遊戲</div>
+      <div class="game-score" id="gameScore" aria-live="polite">000000</div>
+
+      <section class="game" id="game" aria-label="按空白鍵讓紅點跳上圖形">
+        <canvas class="game-canvas" id="gameCanvas" width="1470" height="470"></canvas>
+      </section>
+
+      <img class="footer-shot" src="https://www.figma.com/api/mcp/asset/720911ed-1e2d-4471-8d44-7b6af569d229" alt="">
+
+      <footer class="mobile-footer">
+        <div class="mobile-footer-brand">
+          <img class="mobile-footer-logo" src="https://www.figma.com/api/mcp/asset/1b3899c1-f7f3-4c90-a35b-e26f8d163ffa" alt="公視新聞">
+          <div class="mobile-socials" aria-label="社群連結">
+            <img src="https://www.figma.com/api/mcp/asset/007ed860-5894-4fce-b51d-a46423bdfd64" alt="">
+            <img src="https://www.figma.com/api/mcp/asset/6995fcd0-f19b-4580-a226-edd480ae8237" alt="">
+            <img src="https://www.figma.com/api/mcp/asset/df15d92c-b470-4b93-a087-f95a7645dc41" alt="">
+            <img src="https://www.figma.com/api/mcp/asset/eefdd128-56d2-48e9-93e0-b31c39c46df9" alt="">
+            <img src="https://www.figma.com/api/mcp/asset/a4858631-c419-451c-8f76-cf34a560eb75" alt="">
+            <img src="https://www.figma.com/api/mcp/asset/55d3ee46-ed87-4456-b601-20f26ae284b8" alt="">
+          </div>
+        </div>
+        <div class="mobile-footer-index">
+          <div class="mobile-footer-links">
+            <ul>
+              <li>國際</li>
+              <li>政治</li>
+              <li>社會</li>
+              <li>環境</li>
+              <li>生活</li>
+              <li>社福人權</li>
+            </ul>
+            <div class="mobile-footer-link-pair">
+              <ul>
+                <li>Live正發生</li>
+                <li>深度專題</li>
+                <li>觀點</li>
+                <li>副刊</li>
+                <li>熱門議題</li>
+                <li>新聞小百科</li>
+              </ul>
+              <ul>
+                <li>影音</li>
+                <li>Podcast</li>
+                <li>節目</li>
+              </ul>
+            </div>
+          </div>
+          <div class="mobile-footer-groups">
+            <section>
+              <h2>公廣集團</h2>
+              <ul>
+                <li>公共電視</li>
+                <li>PTS TW</li>
+                <li>公視台語台</li>
+                <li>客家電視台</li>
+                <li>中華電視公司</li>
+                <li>Taiwan+</li>
+              </ul>
+            </section>
+            <section>
+              <h2>主題網站</h2>
+              <ul>
+                <li>我們的島</li>
+                <li>獨立特派員</li>
+                <li>公視新聞實驗室</li>
+                <li>PNN新聞議題中心</li>
+              </ul>
+            </section>
+          </div>
+          <img class="mobile-footer-graphic" src="https://www.figma.com/api/mcp/asset/361ce695-84a4-4bf7-998a-38cf6c1fb535" alt="">
+        </div>
+        <div class="mobile-footer-details">
+          <nav>
+            <span>關於我們</span>
+            <span>更正啟事</span>
+            <span>最新消息</span>
+            <span>服務條款</span>
+            <span>隱私權保護政策</span>
+          </nav>
+          <span>Copyright © 2020 Public Television Service Foundation. All Rights Reserved.</span>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const DESKTOP_DESIGN_WIDTH = 1470;
+    const MOBILE_DESIGN_WIDTH = 320;
+    const page = document.getElementById("page");
+    const viewport = document.getElementById("viewport");
+    const canvas = document.getElementById("gameCanvas");
+    const gameHint = document.getElementById("gameHint");
+    const gameScore = document.getElementById("gameScore");
+    const ctx = canvas.getContext("2d");
+
+    const LOOP_WIDTH = 4820;
+    const GAME_WIDTH = 1470;
+    const GAME_HEIGHT = 470;
+    const BALL_RADIUS = 28;
+    const FLOOR_Y = 330;
+    const GRAVITY = 1420;
+    const JUMP_VELOCITY = -630;
+    const RUN_SPEED = 238;
+    const CAMERA_LEAD = 360;
+
+    const palette = {
+      blue: "#007CFF",
+      deepBlue: "#0046A8",
+      red: "#FF1616",
+      coral: "#FF5050",
+      blush: "#EEA8A8",
+      gray: "#D9D9D9",
+      page: "#F5F5F5",
+    };
+
+    const platforms = [
+      { x: -40, y: FLOOR_Y, w: 520, h: 66, type: "bar", color: palette.blue, angle: 0 },
+      { x: 620, y: 268, w: 118, h: 118, type: "circle", color: palette.blush, angle: 0 },
+      { x: 860, y: 266, w: 205, h: 46, type: "bar", color: palette.deepBlue, angle: -18 },
+      { x: 1135, y: 242, w: 170, h: 42, type: "bar", color: palette.coral, angle: 24 },
+      { x: 1400, y: 260, w: 240, h: 48, type: "bar", color: palette.deepBlue, angle: -9 },
+      { x: 1720, y: 232, w: 82, h: 82, type: "square", color: palette.blush, angle: 16 },
+      { x: 1935, y: 274, w: 154, h: 154, type: "circle", color: palette.blue, angle: 0 },
+      { x: 2185, y: 304, w: 226, h: 44, type: "bar", color: palette.gray, angle: 17 },
+      { x: 2490, y: 252, w: 100, h: 100, type: "square", color: palette.deepBlue, angle: -17 },
+      { x: 2715, y: 234, w: 218, h: 46, type: "bar", color: palette.coral, angle: -14 },
+      { x: 3045, y: 210, w: 266, h: 50, type: "bar", color: palette.blue, angle: -22 },
+      { x: 3435, y: 276, w: 134, h: 134, type: "circle", color: palette.blush, angle: 0 },
+      { x: 3675, y: 316, w: 196, h: 44, type: "bar", color: palette.deepBlue, angle: 27 },
+      { x: 3920, y: 262, w: 150, h: 44, type: "bar", color: palette.gray, angle: -25 },
+      { x: 4185, y: 300, w: 220, h: 48, type: "bar", color: palette.deepBlue, angle: -28 },
+      { x: 4510, y: 270, w: 104, h: 104, type: "square", color: palette.coral, angle: 18 },
+    ];
+
+    const state = {
+      x: 100,
+      y: FLOOR_Y - BALL_RADIUS,
+      vy: 0,
+      cameraX: 0,
+      lastTime: 0,
+      grounded: false,
+      gameOver: false,
+      started: false,
+      resetTimer: 0,
+      activePlatform: -1,
+      clock: 0,
+      lap: 0,
+      score: 0,
+      bestScore: 0,
+      hasRecord: false,
+    };
+
+    function isMobileLayout() {
+      return window.matchMedia("(max-width: 767px)").matches;
+    }
+
+    function fitArtboard() {
+      const designWidth = isMobileLayout() ? MOBILE_DESIGN_WIDTH : DESKTOP_DESIGN_WIDTH;
+      const scale = window.innerWidth / designWidth;
+      page.style.setProperty("--screen-design-height", `${window.innerHeight / scale}px`);
+      page.style.transform = `scale(${scale})`;
+      page.style.marginLeft = "0";
+      viewport.style.height = `${page.offsetHeight * scale}px`;
+    }
+
+    function formatScore(value) {
+      return String(Math.max(0, Math.floor(value))).padStart(6, "0");
+    }
+
+    function renderScore() {
+      const current = formatScore(state.score);
+      if (!state.hasRecord) {
+        gameScore.textContent = current;
+        return;
+      }
+
+      gameScore.innerHTML = `<span class="best">最高紀錄 ${formatScore(state.bestScore)}</span><span class="current">${current}</span>`;
+    }
+
+    function renderStartHint() {
+      if (isMobileLayout()) {
+        gameHint.textContent = "新聞很多，休息一下！點一下開始遊戲";
+        return;
+      }
+
+      gameHint.innerHTML = '新聞很多，休息一下！按 <span class="keycap">Space</span> 開始遊戲';
+    }
+
+    function resetGame() {
+      state.x = 100;
+      state.y = FLOOR_Y - BALL_RADIUS;
+      state.vy = 0;
+      state.cameraX = 0;
+      state.lastTime = 0;
+      state.grounded = false;
+      state.gameOver = false;
+      state.started = false;
+      state.resetTimer = 0;
+      state.activePlatform = -1;
+      state.lap = 0;
+      state.score = 0;
+      renderStartHint();
+      gameHint.style.opacity = "1";
+      renderScore();
+      platforms.forEach((platform) => {
+        platform.wobble = 0;
+      });
+    }
+
+    function finishGame() {
+      state.score = Math.max(state.score, Math.floor(Math.max(0, state.x - 100) / 18));
+      state.bestScore = Math.max(state.bestScore, state.score);
+      state.hasRecord = true;
+      state.gameOver = true;
+      state.resetTimer = 999;
+      if (isMobileLayout()) {
+        gameHint.textContent = "Game Over ! 點一下重新開始";
+      } else {
+        gameHint.innerHTML = 'Game Over ! 再按一次 <span class="keycap">Space</span> 重新開始';
+      }
+      gameHint.style.opacity = "1";
+      renderScore();
+    }
+
+    function drawPlatform(platform, offset, index) {
+      const sx = platform.x + offset - state.cameraX;
+      const wobble = platform.wobble || 0;
+      const idleAmount = index === 0 ? 0 : platform.type === "circle" ? 0.55 : 1.65;
+      const idleSpeed = platform.type === "square" ? 1.45 : 1.05;
+      const idleRotation = Math.sin(state.clock * idleSpeed + index * 0.87) * idleAmount;
+      const touchRotation = Math.sin(wobble * Math.PI) * 3.6;
+      ctx.save();
+      ctx.translate(sx + platform.w / 2, platform.y + platform.h / 2);
+      ctx.rotate(((platform.angle + idleRotation + touchRotation) * Math.PI) / 180);
+      ctx.fillStyle = platform.color;
+
+      if (platform.type === "circle") {
+        ctx.beginPath();
+        ctx.arc(0, 0, platform.w / 2, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillRect(-platform.w / 2, -platform.h / 2, platform.w, platform.h);
+      }
+
+      ctx.restore();
+    }
+
+    function getPlatformTop(platform, offset, x) {
+      const platformX = platform.x + offset;
+      if (x < platformX - BALL_RADIUS * 0.55 || x > platformX + platform.w + BALL_RADIUS * 0.55) {
+        return null;
+      }
+
+      if (platform.type === "circle") {
+        const cx = platformX + platform.w / 2;
+        const r = platform.w / 2;
+        const dx = x - cx;
+        if (Math.abs(dx) > r) return null;
+        return platform.y + r - Math.sqrt(r * r - dx * dx);
+      }
+
+      if (Math.abs(platform.angle) > 2) {
+        const cx = platformX + platform.w / 2;
+        const cy = platform.y + platform.h / 2;
+        const rad = (platform.angle * Math.PI) / 180;
+        const localX = x - cx;
+        return cy - platform.h / 2 + Math.tan(rad) * localX;
+      }
+
+      return platform.y;
+    }
+
+    function collideWithPlatforms(prevY) {
+      state.grounded = false;
+      const ballBottom = state.y + BALL_RADIUS;
+      const prevBottom = prevY + BALL_RADIUS;
+      const startOffset = Math.floor((state.x - LOOP_WIDTH) / LOOP_WIDTH) * LOOP_WIDTH;
+
+      for (let repeat = 0; repeat < 3; repeat += 1) {
+        const offset = startOffset + repeat * LOOP_WIDTH;
+        for (let index = 0; index < platforms.length; index += 1) {
+          const platform = platforms[index];
+          const top = getPlatformTop(platform, offset, state.x);
+          if (top === null) continue;
+          if (state.vy >= 0 && prevBottom <= top + 28 && ballBottom >= top - 10 && ballBottom <= top + 46) {
+            state.y = top - BALL_RADIUS;
+            state.vy = 0;
+            state.grounded = true;
+            const platformKey = `${index}-${offset}`;
+            if (state.activePlatform !== platformKey) {
+              platform.wobble = 1;
+              state.activePlatform = platformKey;
+            }
+            return;
+          }
+        }
+      }
+    }
+
+    function triggerAction() {
+      if (state.gameOver) {
+        resetGame();
+        state.started = true;
+        gameHint.style.opacity = "0";
+        return;
+      }
+
+      if (!state.started) {
+        state.started = true;
+        gameHint.style.opacity = "0";
+      }
+
+      if (state.grounded) {
+        state.vy = JUMP_VELOCITY;
+        state.grounded = false;
+        state.activePlatform = -1;
+      }
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+      ctx.fillStyle = palette.page;
+      ctx.fillRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
+
+      const startOffset = Math.floor(state.cameraX / LOOP_WIDTH) * LOOP_WIDTH;
+      for (let repeat = 0; repeat < 3; repeat += 1) {
+        const offset = startOffset + repeat * LOOP_WIDTH;
+        platforms.forEach((platform, index) => drawPlatform(platform, offset, index));
+      }
+
+      const ballScreenX = state.x - state.cameraX;
+      ctx.fillStyle = palette.red;
+      ctx.beginPath();
+      ctx.arc(ballScreenX, state.y, BALL_RADIUS, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    function update(time) {
+      if (!state.lastTime) state.lastTime = time;
+      const dt = Math.min((time - state.lastTime) / 1000, 0.032);
+      state.lastTime = time;
+      state.clock += dt;
+
+      platforms.forEach((platform) => {
+        platform.wobble = Math.max(0, (platform.wobble || 0) - dt * 3.6);
+      });
+
+      if (state.started && !state.gameOver) {
+        const prevY = state.y;
+        state.lap = Math.floor(state.x / LOOP_WIDTH);
+        const speedBoost = 1 + Math.min(state.lap, 3) * 0.14;
+        state.x += RUN_SPEED * speedBoost * dt;
+        state.score = Math.max(state.score, Math.floor(Math.max(0, state.x - 100) / 18));
+        renderScore();
+        state.vy += GRAVITY * dt;
+        state.y += state.vy * dt;
+        if (state.y < BALL_RADIUS + 4) {
+          state.y = BALL_RADIUS + 4;
+          state.vy = 0;
+        }
+        collideWithPlatforms(prevY);
+        state.cameraX = Math.max(0, state.x - CAMERA_LEAD);
+
+        if (state.y > GAME_HEIGHT + BALL_RADIUS) {
+          finishGame();
+        }
+      } else if (state.gameOver) {
+        state.resetTimer -= dt;
+        if (state.resetTimer <= 0) resetGame();
+      }
+
+      draw();
+      requestAnimationFrame(update);
+    }
+
+    window.addEventListener("resize", () => {
+      fitArtboard();
+      if (!state.started && !state.gameOver) renderStartHint();
+    });
+    window.addEventListener("keydown", (event) => {
+      if (event.code === "Space") {
+        event.preventDefault();
+        triggerAction();
+      }
+    });
+    canvas.addEventListener("pointerdown", triggerAction);
+    gameHint.addEventListener("pointerdown", triggerAction);
+
+    fitArtboard();
+    resetGame();
+    requestAnimationFrame(update);
+  </script>
+</body>
+</html>
