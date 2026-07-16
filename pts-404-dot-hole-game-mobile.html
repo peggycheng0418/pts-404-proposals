@@ -19,6 +19,7 @@
       --search-width: 150px;
       --message-top: 278px;
       --hint-top: 451px;
+      --footer-top: calc(var(--screen-design-height, 624px) + 24px);
       font-family: Roboto, "Noto Sans TC", "Noto Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
@@ -554,7 +555,7 @@
 
     .artboard {
       width: var(--stage-width);
-      min-height: calc(var(--screen-design-height, 624px) + 642px);
+      min-height: calc(var(--footer-top) + 642px);
     }
 
     .header-shot,
@@ -700,7 +701,7 @@
     .mobile-footer {
       position: absolute;
       left: 0;
-      top: var(--screen-design-height, 624px);
+      top: var(--footer-top);
       display: flex;
       width: var(--stage-width);
       flex-direction: column;
@@ -1030,6 +1031,7 @@
       const messageTop = 267 + heightRatio * 40;
       const hintTop = 438 + heightRatio * 68;
       const scoreSafeBottom = Math.max(30, Math.min(44, 44 + heightRatio * 4));
+      const footerGap = 24;
       const stagePadding = 24;
       const assistGap = Math.max(8, Math.min(20, (stageWidth - 320) * 0.146 + 8));
       const searchWidth = Math.max(72, Math.min(150, stageWidth - stagePadding * 2 - 184 - assistGap * 2));
@@ -1038,6 +1040,7 @@
       page.style.setProperty("--assist-gap", `${assistGap}px`);
       page.style.setProperty("--search-width", `${searchWidth}px`);
       page.style.setProperty("--screen-design-height", `${screenDesignHeight}px`);
+      page.style.setProperty("--footer-top", `${screenDesignHeight + footerGap}px`);
       page.style.setProperty("--score-safe-bottom", `${scoreSafeBottom}px`);
       page.style.setProperty("--message-top", `${messageTop}px`);
       page.style.setProperty("--hint-top", `${hintTop}px`);
