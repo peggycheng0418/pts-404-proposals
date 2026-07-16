@@ -74,21 +74,21 @@
     .message {
       position: absolute;
       left: 0;
-      top: 258px;
+      top: 248px;
       width: 1470px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 24px;
+      gap: 20px;
       z-index: 3;
     }
 
     .message h1 {
       position: relative;
       margin: 0;
-      width: 360px;
-      height: 29px;
-      font-size: 24px;
+      width: 648px;
+      height: 36px;
+      font-size: 30px;
       line-height: 1.2;
       font-weight: 700;
       letter-spacing: 0;
@@ -128,7 +128,7 @@
 
     .assist {
       display: grid;
-      grid-template-columns: 128px 212px 128px;
+      grid-template-columns: 80px 280px 84px;
       align-items: center;
       column-gap: 20px;
       font-size: 16px;
@@ -146,7 +146,7 @@
 
     .search {
       position: relative;
-      width: 212px;
+      width: 280px;
       height: 44px;
     }
 
@@ -158,7 +158,7 @@
       background: transparent;
       padding: 0 48px 0 20px;
       color: #171717;
-      font-size: 14px;
+      font-size: 16px;
       outline: none;
     }
 
@@ -184,15 +184,23 @@
     .game-hint {
       position: absolute;
       left: 0;
-      top: 448px;
+      top: 476px;
       width: 1470px;
       color: #737373;
-      font-size: 14px;
+      font-size: 12px;
       line-height: 1.7;
-      font-weight: 400;
+      font-weight: 700;
       text-align: center;
       letter-spacing: 0;
       z-index: 4;
+    }
+
+    .game-hint .danger {
+      color: #FF1616;
+    }
+
+    .game-hint .restart {
+      color: #737373;
     }
 
     .game-hint .keycap {
@@ -215,21 +223,31 @@
 
     .game-score {
       position: absolute;
-      left: 0;
-      top: 474px;
-      width: 1470px;
+      right: 123px;
+      top: 732px;
+      width: 360px;
       color: #737373;
-      font-size: 14px;
-      line-height: 1.7;
-      font-weight: 400;
-      text-align: center;
+      font-size: 18px;
+      line-height: 25.2px;
+      font-weight: 700;
+      text-align: right;
       letter-spacing: 0;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      align-items: center;
+      white-space: nowrap;
+      opacity: 0;
+      transition: opacity 160ms linear;
       z-index: 4;
+    }
+
+    .game-score.is-visible {
+      opacity: 1;
     }
 
     .game-score .best {
       color: #a1a1a1;
-      margin-right: 16px;
     }
 
     .game-score .current {
@@ -239,7 +257,7 @@
     .game {
       position: absolute;
       left: 0;
-      top: 350px;
+      top: 330px;
       width: 1470px;
       height: 470px;
       overflow: hidden;
@@ -356,6 +374,8 @@
 
       .message h1 {
         width: 320px;
+        height: 29px;
+        font-size: 24px;
       }
 
       .assist {
@@ -379,8 +399,12 @@
       }
 
       .game-score {
-        top: 336px;
-        width: 320px;
+        right: 20px;
+        top: calc(var(--screen-design-height, 700px) - 54px);
+        width: 220px;
+        font-size: 16px;
+        line-height: 1.4;
+        text-align: right;
       }
 
       .game {
@@ -554,11 +578,11 @@
               <path d="m16 16 4 4" stroke-width="2" stroke-linecap="round"></path>
             </svg>
           </form>
-          <span>或回到 <a class="home-link" href="https://news.pts.org.tw/">首頁</a></span>
+          <span>或回到<a class="home-link" href="https://news.pts.org.tw/">首頁</a></span>
         </div>
       </section>
 
-      <div class="game-hint" id="gameHint">新聞很多，休息一下！按 <span class="keycap">Space</span> 開始遊戲</div>
+      <div class="game-hint" id="gameHint">休息一下！按空白鍵開始遊戲</div>
       <div class="game-score" id="gameScore" aria-live="polite">000000</div>
 
       <section class="game" id="game" aria-label="按空白鍵讓紅點跳上圖形">
@@ -674,26 +698,26 @@
     };
 
     const platforms = [
-      { x: -40, y: FLOOR_Y, w: 520, h: 66, type: "bar", color: palette.blue, angle: 0 },
-      { x: 620, y: 268, w: 118, h: 118, type: "circle", color: palette.blush, angle: 0 },
-      { x: 860, y: 266, w: 205, h: 46, type: "bar", color: palette.deepBlue, angle: -18 },
-      { x: 1135, y: 242, w: 170, h: 42, type: "bar", color: palette.coral, angle: 24 },
-      { x: 1400, y: 260, w: 240, h: 48, type: "bar", color: palette.deepBlue, angle: -9 },
-      { x: 1720, y: 232, w: 82, h: 82, type: "square", color: palette.blush, angle: 16 },
-      { x: 1935, y: 274, w: 154, h: 154, type: "circle", color: palette.blue, angle: 0 },
-      { x: 2185, y: 304, w: 226, h: 44, type: "bar", color: palette.gray, angle: 17 },
-      { x: 2490, y: 252, w: 100, h: 100, type: "square", color: palette.deepBlue, angle: -17 },
-      { x: 2715, y: 234, w: 218, h: 46, type: "bar", color: palette.coral, angle: -14 },
-      { x: 3045, y: 210, w: 266, h: 50, type: "bar", color: palette.blue, angle: -22 },
-      { x: 3435, y: 276, w: 134, h: 134, type: "circle", color: palette.blush, angle: 0 },
-      { x: 3675, y: 316, w: 196, h: 44, type: "bar", color: palette.deepBlue, angle: 27 },
-      { x: 3920, y: 262, w: 150, h: 44, type: "bar", color: palette.gray, angle: -25 },
-      { x: 4185, y: 300, w: 220, h: 48, type: "bar", color: palette.deepBlue, angle: -28 },
-      { x: 4510, y: 270, w: 104, h: 104, type: "square", color: palette.coral, angle: 18 },
+      { x: 0, y: FLOOR_Y, w: 520, h: 66, type: "bar", color: palette.blue, angle: 0 },
+      { x: 680, y: 248, w: 92, h: 92, type: "square", color: palette.gray, angle: -15 },
+      { x: 900, y: 266, w: 205, h: 46, type: "bar", color: palette.deepBlue, angle: -18 },
+      { x: 1200, y: 230, w: 86, h: 86, type: "square", color: palette.coral, angle: 18 },
+      { x: 1440, y: 260, w: 240, h: 48, type: "bar", color: palette.deepBlue, angle: -9 },
+      { x: 1760, y: 232, w: 82, h: 82, type: "square", color: palette.blush, angle: 16 },
+      { x: 1975, y: 244, w: 154, h: 154, type: "circle", color: palette.blue, angle: 0 },
+      { x: 2265, y: 268, w: 96, h: 96, type: "square", color: palette.gray, angle: 17 },
+      { x: 2530, y: 252, w: 100, h: 100, type: "square", color: palette.deepBlue, angle: -17 },
+      { x: 2755, y: 234, w: 218, h: 46, type: "bar", color: palette.coral, angle: -14 },
+      { x: 3085, y: 210, w: 266, h: 50, type: "bar", color: palette.blue, angle: -22 },
+      { x: 3475, y: 244, w: 134, h: 134, type: "circle", color: palette.blush, angle: 0 },
+      { x: 3715, y: 316, w: 196, h: 44, type: "bar", color: palette.deepBlue, angle: 27 },
+      { x: 3985, y: 240, w: 92, h: 92, type: "square", color: palette.gray, angle: -20 },
+      { x: 4225, y: 300, w: 220, h: 48, type: "bar", color: palette.deepBlue, angle: -28 },
+      { x: 4550, y: 270, w: 104, h: 104, type: "square", color: palette.coral, angle: 18 },
     ];
 
     const state = {
-      x: 100,
+      x: 151,
       y: FLOOR_Y - BALL_RADIUS,
       vy: 0,
       cameraX: 0,
@@ -739,15 +763,15 @@
 
     function renderStartHint() {
       if (isMobileLayout()) {
-        gameHint.textContent = "新聞很多，休息一下！點一下開始遊戲";
+        gameHint.textContent = "休息一下！點一下開始遊戲";
         return;
       }
 
-      gameHint.innerHTML = '新聞很多，休息一下！按 <span class="keycap">Space</span> 開始遊戲';
+      gameHint.textContent = "休息一下！按空白鍵開始遊戲";
     }
 
     function resetGame() {
-      state.x = 100;
+      state.x = 151;
       state.y = FLOOR_Y - BALL_RADIUS;
       state.vy = 0;
       state.cameraX = 0;
@@ -761,6 +785,7 @@
       state.score = 0;
       renderStartHint();
       gameHint.style.opacity = "1";
+      gameScore.classList.remove("is-visible");
       renderScore();
       platforms.forEach((platform) => {
         platform.wobble = 0;
@@ -768,17 +793,18 @@
     }
 
     function finishGame() {
-      state.score = Math.max(state.score, Math.floor(Math.max(0, state.x - 100) / 18));
+      state.score = Math.max(state.score, Math.floor(Math.max(0, state.x - 151) / 18));
       state.bestScore = Math.max(state.bestScore, state.score);
       state.hasRecord = true;
       state.gameOver = true;
       state.resetTimer = 999;
       if (isMobileLayout()) {
-        gameHint.textContent = "Game Over ! 點一下重新開始";
+        gameHint.innerHTML = '<span class="danger">Game Over !</span><span class="restart"> 點一下重新開始</span>';
       } else {
-        gameHint.innerHTML = 'Game Over ! 再按一次 <span class="keycap">Space</span> 重新開始';
+        gameHint.innerHTML = '<span class="danger">Game Over !</span><span class="restart"> 按空白鍵重新開始</span>';
       }
       gameHint.style.opacity = "1";
+      gameScore.classList.add("is-visible");
       renderScore();
     }
 
@@ -847,7 +873,7 @@
             state.vy = 0;
             state.grounded = true;
             const platformKey = `${index}-${offset}`;
-            if (state.activePlatform !== platformKey) {
+            if (index !== 0 && state.activePlatform !== platformKey) {
               platform.wobble = 1;
               state.activePlatform = platformKey;
             }
@@ -861,12 +887,14 @@
       if (state.gameOver) {
         resetGame();
         state.started = true;
+        gameScore.classList.add("is-visible");
         gameHint.style.opacity = "0";
         return;
       }
 
       if (!state.started) {
         state.started = true;
+        gameScore.classList.add("is-visible");
         gameHint.style.opacity = "0";
       }
 
@@ -910,7 +938,7 @@
         state.lap = Math.floor(state.x / LOOP_WIDTH);
         const speedBoost = 1 + Math.min(state.lap, 3) * 0.14;
         state.x += RUN_SPEED * speedBoost * dt;
-        state.score = Math.max(state.score, Math.floor(Math.max(0, state.x - 100) / 18));
+        state.score = Math.max(state.score, Math.floor(Math.max(0, state.x - 151) / 18));
         renderScore();
         state.vy += GRAVITY * dt;
         state.y += state.vy * dt;
