@@ -960,6 +960,7 @@
     const JUMP_VELOCITY = -630;
     const RUN_SPEED = 238;
     const CAMERA_LEAD = 360;
+    const MOBILE_WORLD_SCALE = 0.46;
 
     const palette = {
       blue: "#007CFF",
@@ -1011,7 +1012,7 @@
       canvasHeight: 624,
       hintTop: 451,
       worldOffsetY: 0,
-      worldYScale: 0.68,
+      worldScale: MOBILE_WORLD_SCALE,
     };
 
     function isMobileLayout() {
@@ -1056,11 +1057,11 @@
     }
 
     function getMobileViewWidth() {
-      return state.stageWidth / state.worldYScale;
+      return state.stageWidth / state.worldScale;
     }
 
-    function platformVisualHeight(platform, yScale = state.worldYScale) {
-      return platform.h * yScale;
+    function platformVisualHeight(platform) {
+      return platform.h * state.worldScale;
     }
 
     function updateWorldMetrics() {
@@ -1069,15 +1070,12 @@
       const scoreTop = state.canvasHeight - scoreSafeBottom;
       const minPlatformY = Math.min(...platforms.map((platform) => platform.y));
       const hintClearance = state.hintTop + 52;
-      let scale = Math.max(0.34, Math.min(0.72, 0.48 + heightRatio * 0.15));
+      const scale = MOBILE_WORLD_SCALE;
       const desiredTop = 520 + heightRatio * 144;
       const minimumFirstPlatformTop = hintClearance + (FLOOR_Y - minPlatformY) * scale;
-      let desiredFirstPlatformTop = Math.max(desiredTop, minimumFirstPlatformTop);
-      const maxScaleByScore = (scoreTop - 18 - desiredFirstPlatformTop) / 66;
-      scale = Math.max(0.28, Math.min(scale, maxScaleByScore));
-      desiredFirstPlatformTop = Math.min(scoreTop - 42, Math.max(desiredTop, hintClearance + (FLOOR_Y - minPlatformY) * scale));
-      state.worldYScale = scale;
-      state.worldOffsetY = desiredFirstPlatformTop - FLOOR_Y * state.worldYScale;
+      const desiredFirstPlatformTop = Math.min(scoreTop - 42, Math.max(desiredTop, minimumFirstPlatformTop));
+      state.worldScale = scale;
+      state.worldOffsetY = desiredFirstPlatformTop - FLOOR_Y * state.worldScale;
     }
 
     function formatScore(value) {
@@ -1144,17 +1142,17 @@
     }
 
     function mobileY(value) {
-      return state.worldOffsetY + value * state.worldYScale;
+      return state.worldOffsetY + value * state.worldScale;
     }
 
     function drawPlatform(platform, offset, index) {
-      const sx = (platform.x + offset - state.cameraX) * state.worldYScale;
+      const sx = (platform.x + offset - state.cameraX) * state.worldScale;
       const wobble = platform.wobble || 0;
       const idleAmount = index === 0 ? 0 : platform.type === "circle" ? 0.55 : 1.65;
       const idleSpeed = platform.type === "square" ? 1.45 : 1.05;
       const idleRotation = Math.sin(state.clock * idleSpeed + index * 0.87) * idleAmount;
       const touchRotation = Math.sin(wobble * Math.PI) * 3.6;
-      const scaledWidth = platform.w * state.worldYScale;
+      const scaledWidth = platform.w * state.worldScale;
       const scaledHeight = platformVisualHeight(platform);
       const sy = mobileY(platform.y);
       ctx.save();
@@ -1258,9 +1256,9 @@
         platforms.forEach((platform, index) => drawPlatform(platform, offset, index));
       }
 
-      const ballScreenX = (state.x - state.cameraX) * state.worldYScale;
+      const ballScreenX = (state.x - state.cameraX) * state.worldScale;
       const ballScreenY = mobileY(state.y);
-      const mobileBallRadius = BALL_RADIUS * state.worldYScale;
+      const mobileBallRadius = BALL_RADIUS * state.worldScale;
       if (!state.ballHidden) {
         ctx.fillStyle = palette.red;
         ctx.beginPath();
@@ -1302,7 +1300,7 @@
         if (!state.ballHidden) {
           state.vy += GRAVITY * dt;
           state.y += state.vy * dt;
-          if (mobileY(state.y) - BALL_RADIUS * state.worldYScale > state.canvasHeight + 80) {
+          if (mobileY(state.y) - BALL_RADIUS * state.worldScale > state.canvasHeight + 80) {
             state.ballHidden = true;
           }
         }
