@@ -1020,7 +1020,12 @@
     function fitArtboard() {
       const stageWidth = Math.min(window.innerWidth, MOBILE_MAX_WIDTH);
       const scale = 1;
-      const screenDesignHeight = window.innerHeight / scale;
+      const viewportHeight = Math.max(
+        window.innerHeight || 0,
+        document.documentElement.clientHeight || 0,
+        window.visualViewport ? window.visualViewport.height : 0
+      );
+      const screenDesignHeight = Math.ceil(viewportHeight / scale) + 1;
       const heightRatio = Math.max(-0.55, (screenDesignHeight - 624) / 176);
       const messageTop = 267 + heightRatio * 40;
       const hintTop = 438 + heightRatio * 68;
@@ -1310,6 +1315,12 @@
       fitArtboard();
       if (!state.started && !state.gameOver) renderStartHint();
     });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", () => {
+        fitArtboard();
+        if (!state.started && !state.gameOver) renderStartHint();
+      });
+    }
     window.addEventListener("keydown", (event) => {
       if (event.code === "Space") {
         event.preventDefault();
