@@ -17,8 +17,8 @@
       --stage-padding: 24px;
       --assist-gap: 20px;
       --search-width: 150px;
-      --message-top: 278px;
-      --hint-top: 451px;
+      --message-top: 256px;
+      --hint-top: 406px;
       --footer-top: calc(var(--screen-design-height, 624px) + 24px);
       font-family: Roboto, "Noto Sans TC", "Noto Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     }
@@ -664,9 +664,9 @@
     .game-hint {
       top: var(--hint-top);
       width: var(--stage-width);
-      font-size: 12px;
+      font-size: 14px;
       line-height: 1.7;
-      font-weight: 700;
+      font-weight: 400;
     }
 
     .game-score {
@@ -857,7 +857,7 @@
         </div>
       </section>
 
-      <div class="game-hint" id="gameHint">休息一下！輕觸任一形狀開始遊戲</div>
+      <div class="game-hint" id="gameHint">輕觸畫面，邊玩邊看公視新聞前世今生</div>
       <div class="game-score" id="gameScore" aria-live="polite">000000</div>
 
       <section class="game" id="game" aria-label="按空白鍵讓紅點跳上圖形">
@@ -952,7 +952,7 @@
     const gameScore = document.getElementById("gameScore");
     const ctx = canvas.getContext("2d");
 
-    const LOOP_WIDTH = 4820;
+    const LOOP_WIDTH = 6620;
     const BASE_GAME_HEIGHT = 470;
     const BALL_RADIUS = 28;
     const FLOOR_Y = 330;
@@ -960,7 +960,7 @@
     const JUMP_VELOCITY = -630;
     const RUN_SPEED = 238;
     const CAMERA_LEAD = 360;
-    const MOBILE_WORLD_SCALE = 0.46;
+    const MOBILE_WORLD_SCALE = 0.6;
 
     const palette = {
       blue: "#007CFF",
@@ -971,25 +971,54 @@
       gray: "#D9D9D9",
       page: "#F5F5F5",
     };
+    const repeatColors = [palette.blue, palette.deepBlue, palette.coral, palette.blush, palette.gray];
+    const repeatColorCache = new Map();
 
     const platforms = [
       { x: 0, y: FLOOR_Y, w: 520, h: 66, type: "bar", color: palette.blue, angle: 0 },
-      { x: 680, y: 248, w: 92, h: 92, type: "square", color: palette.gray, angle: -15 },
-      { x: 900, y: 266, w: 205, h: 46, type: "bar", color: palette.deepBlue, angle: -18 },
-      { x: 1200, y: 230, w: 86, h: 86, type: "square", color: palette.coral, angle: 18 },
-      { x: 1440, y: 260, w: 240, h: 48, type: "bar", color: palette.deepBlue, angle: -9 },
-      { x: 1760, y: 232, w: 82, h: 82, type: "square", color: palette.blush, angle: 16 },
-      { x: 1975, y: 244, w: 154, h: 154, type: "circle", color: palette.blue, angle: 0 },
-      { x: 2265, y: 268, w: 96, h: 96, type: "square", color: palette.gray, angle: 17 },
-      { x: 2530, y: 252, w: 100, h: 100, type: "square", color: palette.deepBlue, angle: -17 },
-      { x: 2755, y: 234, w: 218, h: 46, type: "bar", color: palette.coral, angle: -14 },
-      { x: 3085, y: 210, w: 266, h: 50, type: "bar", color: palette.blue, angle: -22 },
-      { x: 3475, y: 244, w: 134, h: 134, type: "circle", color: palette.blush, angle: 0 },
-      { x: 3715, y: 316, w: 196, h: 44, type: "bar", color: palette.deepBlue, angle: 27 },
-      { x: 3985, y: 240, w: 92, h: 92, type: "square", color: palette.gray, angle: -20 },
-      { x: 4225, y: 300, w: 220, h: 48, type: "bar", color: palette.deepBlue, angle: -28 },
-      { x: 4550, y: 270, w: 104, h: 104, type: "square", color: palette.coral, angle: 18 },
+      { x: 660, y: 252, w: 112, h: 112, type: "square", color: palette.gray, angle: -15, labelLines: ["網站創設於", "2010年"] },
+      { x: 890, y: 260, w: 230, h: 48, type: "bar", color: palette.deepBlue, angle: -18 },
+      { x: 1220, y: 232, w: 112, h: 112, type: "square", color: palette.coral, angle: 18, labelLines: ["2020年推出", "新聞速報", "Podcast"] },
+      { x: 1500, y: 258, w: 280, h: 52, type: "bar", color: palette.blue, angle: -8 },
+      { x: 1910, y: 238, w: 96, h: 96, type: "square", color: palette.blush, angle: 16 },
+      { x: 2140, y: 252, w: 270, h: 54, type: "bar", color: palette.deepBlue, angle: -14, label: "2023年設置PWA功能" },
+      { x: 2530, y: 252, w: 104, h: 104, type: "square", color: palette.gray, angle: 17 },
+      { x: 2780, y: 260, w: 250, h: 50, type: "bar", color: palette.coral, angle: -12, label: "2024年推出《一週大事》" },
+      { x: 3170, y: 224, w: 144, h: 144, type: "circle", color: palette.blue, angle: 0 },
+      { x: 3430, y: 256, w: 220, h: 48, type: "bar", color: palette.deepBlue, angle: 20, label: "2025年加入會員功能" },
+      { x: 3760, y: 232, w: 112, h: 112, type: "square", color: palette.blush, angle: -18 },
+      { x: 4020, y: 260, w: 290, h: 52, type: "bar", color: palette.blue, angle: -8, labelLines: ["會員就可以按讚收藏新聞"] },
+      { x: 4430, y: 246, w: 120, h: 120, type: "square", color: palette.deepBlue, angle: 14, label: "快加入會員" },
+      { x: 4710, y: 258, w: 232, h: 48, type: "bar", color: palette.gray, angle: -16 },
+      { x: 5050, y: 236, w: 118, h: 118, type: "square", color: palette.coral, angle: 18, labelLines: ["2020年9月", "第1次改版"] },
+      { x: 5350, y: 252, w: 260, h: 50, type: "bar", color: palette.blue, angle: -22, labelLines: ["2026年9月第2次改版"] },
+      { x: 5750, y: 228, w: 136, h: 136, type: "circle", color: palette.blush, angle: 0 },
+      { x: 6030, y: 256, w: 106, h: 106, type: "square", color: palette.gray, angle: -20, labelLines: ["未完待續"] },
+      { x: 6300, y: 264, w: 260, h: 52, type: "bar", color: palette.deepBlue, angle: -16, label: "手速挺快的嘛！" },
     ];
+
+    function chooseRepeatColor(previousColor) {
+      const choices = repeatColors.filter((color) => color !== previousColor);
+      return choices[Math.floor(Math.random() * choices.length)] || repeatColors[0];
+    }
+
+    function buildRepeatPlatformColors(repeatIndex) {
+      const previousRound = repeatColorCache.get(repeatIndex - 1);
+      let previousColor = previousRound ? previousRound[previousRound.length - 1] : platforms[platforms.length - 1].color;
+      return platforms.map(() => {
+        const color = chooseRepeatColor(previousColor);
+        previousColor = color;
+        return color;
+      });
+    }
+
+    function getRepeatPlatformColor(repeatIndex, platformIndex, originalColor) {
+      if (repeatIndex === 0) return originalColor;
+      if (!repeatColorCache.has(repeatIndex)) {
+        repeatColorCache.set(repeatIndex, buildRepeatPlatformColors(repeatIndex));
+      }
+      return repeatColorCache.get(repeatIndex)[platformIndex] || originalColor;
+    }
 
     const state = {
       x: 151,
@@ -1029,8 +1058,8 @@
       );
       const screenDesignHeight = Math.ceil(viewportHeight / scale) + 1;
       const heightRatio = Math.max(-0.55, (screenDesignHeight - 624) / 176);
-      const messageTop = 267 + heightRatio * 40;
-      const hintTop = 438 + heightRatio * 68;
+      const messageTop = 256 + heightRatio * 40;
+      const hintTop = 406 + heightRatio * 68;
       const scoreSafeBottom = Math.max(30, Math.min(44, 44 + heightRatio * 4));
       const footerGap = 24;
       const stagePadding = 24;
@@ -1094,11 +1123,11 @@
 
     function renderStartHint() {
       if (isMobileLayout()) {
-        gameHint.textContent = "休息一下！輕觸任一形狀開始遊戲";
+        gameHint.textContent = "輕觸畫面，邊玩邊看公視新聞前世今生";
         return;
       }
 
-      gameHint.textContent = "休息一下！按空白鍵開始遊戲";
+      gameHint.textContent = "輕觸畫面，邊玩邊看公視新聞前世今生";
     }
 
     function resetGame() {
@@ -1132,9 +1161,9 @@
       state.resetTimer = 999;
       state.ballHidden = false;
       if (isMobileLayout()) {
-        gameHint.innerHTML = '<span class="danger">Game Over！</span><span class="restart">輕觸任一形狀重新開始</span>';
+        gameHint.innerHTML = '<span class="danger">Game Over！</span><span class="restart">輕觸畫面重新開始</span>';
       } else {
-        gameHint.innerHTML = '<span class="danger">Game Over !</span><span class="restart"> 按空白鍵重新開始</span>';
+        gameHint.innerHTML = '<span class="danger">Game Over！</span><span class="restart">輕觸畫面重新開始</span>';
       }
       gameHint.style.opacity = "1";
       gameScore.classList.add("is-visible");
@@ -1143,6 +1172,48 @@
 
     function mobileY(value) {
       return state.worldOffsetY + value * state.worldScale;
+    }
+
+    function splitLabel(label, maxChars) {
+      const words = String(label).split(" ");
+      if (words.length > 1) {
+        const lines = [];
+        let line = "";
+        words.forEach((word) => {
+          const next = line ? `${line} ${word}` : word;
+          if (next.length > maxChars && line) {
+            lines.push(line);
+            line = word;
+          } else {
+            line = next;
+          }
+        });
+        if (line) lines.push(line);
+        return lines;
+      }
+
+      const lines = [];
+      for (let index = 0; index < label.length; index += maxChars) {
+        lines.push(label.slice(index, index + maxChars));
+      }
+      return lines;
+    }
+
+    function drawPlatformText(platform, width, height, scale = 1) {
+      if (!platform.label && !platform.labelLines) return;
+      const fontSize = 12;
+      const lineHeight = Math.round(fontSize * 1.18);
+      const maxChars = Math.max(4, Math.floor(width / (fontSize * 0.92)));
+      const lines = (platform.labelLines || splitLabel(platform.label, maxChars)).slice(0, 3);
+      const textColor = platform.labelColor || (platform.currentColor === palette.gray || platform.currentColor === palette.blush ? "#111111" : "#FFFFFF");
+      ctx.fillStyle = textColor;
+      ctx.font = `400 ${fontSize}px "Noto Sans TC", "Roboto", sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      const startY = -((lines.length - 1) * lineHeight) / 2;
+      lines.forEach((line, index) => {
+        ctx.fillText(line, 0, startY + index * lineHeight, width - Math.round(14 * scale));
+      });
     }
 
     function drawPlatform(platform, offset, index) {
@@ -1158,7 +1229,10 @@
       ctx.save();
       ctx.translate(sx + scaledWidth / 2, sy + scaledHeight / 2);
       ctx.rotate(((platform.angle + idleRotation + touchRotation) * Math.PI) / 180);
-      ctx.fillStyle = platform.color;
+      const repeatIndex = Math.round(offset / LOOP_WIDTH);
+      const platformColor = getRepeatPlatformColor(repeatIndex, index, platform.color);
+      platform.currentColor = platformColor;
+      ctx.fillStyle = platformColor;
 
       if (platform.type === "circle") {
         ctx.beginPath();
@@ -1167,6 +1241,8 @@
       } else {
         ctx.fillRect(-scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight);
       }
+
+      if (offset === 0) drawPlatformText(platform, scaledWidth, scaledHeight, state.worldScale);
 
       ctx.restore();
     }
@@ -1280,7 +1356,7 @@
       if (state.started && !state.gameOver) {
         const prevY = state.y;
         state.lap = Math.floor(state.x / LOOP_WIDTH);
-        const speedBoost = 1 + Math.min(state.lap, 3) * 0.14;
+        const speedBoost = 1 + state.lap * 0.14;
         state.x += RUN_SPEED * speedBoost * dt;
         state.score = Math.max(state.score, Math.floor(Math.max(0, state.x - 151) / 18));
         renderScore();
