@@ -1,0 +1,1502 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>公視新聞 404 跳過空隙｜手機版</title>
+  <style>
+    :root {
+      --blue: #007CFF;
+      --hole: #0046A8;
+      --red: #FF1616;
+      --black: #171717;
+      --page-bg: #F5F5F5;
+      --game-flow-top: 350px;
+      --score-safe-bottom: 76px;
+      --stage-width: min(100vw, 767px);
+      --stage-padding: 24px;
+      --assist-gap: 20px;
+      --search-width: 150px;
+      --message-top: 256px;
+      --hint-top: 406px;
+      --footer-top: calc(var(--screen-design-height, 624px) + 24px);
+      font-family: Roboto, "Noto Sans TC", "Noto Sans", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      min-height: 100%;
+      background: var(--page-bg);
+      color: var(--black);
+    }
+
+    body {
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .viewport {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      background: var(--page-bg);
+    }
+
+    .artboard {
+      position: relative;
+      width: 1470px;
+      min-height: 1340px;
+      transform-origin: 0 0;
+      background: var(--page-bg);
+    }
+
+    .header-shot {
+      position: absolute;
+      left: 123px;
+      top: 0;
+      width: 1224px;
+      height: 168px;
+      display: block;
+      object-fit: contain;
+      object-position: left top;
+    }
+
+    .mobile-header,
+    .mobile-footer {
+      display: none;
+    }
+
+    .message {
+      position: absolute;
+      left: 0;
+      top: 258px;
+      width: 1470px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      z-index: 3;
+      transition: opacity 160ms linear;
+    }
+
+    .message h1 {
+      position: relative;
+      margin: 0;
+      width: 360px;
+      height: 29px;
+      font-size: 24px;
+      line-height: 1.2;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-align: center;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .title-line {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: translateY(10px);
+      animation: titleSwap 3.6s infinite;
+    }
+
+    .title-line:nth-child(2) {
+      animation-delay: 1.8s;
+    }
+
+    @keyframes titleSwap {
+      0% {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      10%,
+      42% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      50%,
+      100% {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+    }
+
+    .assist {
+      display: grid;
+      grid-template-columns: 128px 212px 128px;
+      align-items: center;
+      column-gap: 20px;
+      font-size: 16px;
+      line-height: 22.4px;
+      font-weight: 500;
+    }
+
+    .assist > span:first-child {
+      text-align: right;
+    }
+
+    .assist > span:last-child {
+      text-align: left;
+    }
+
+    .search {
+      position: relative;
+      width: 212px;
+      height: 44px;
+    }
+
+    .search input {
+      width: 100%;
+      height: 100%;
+      border: 1px solid #d4d4d4;
+      border-radius: 999px;
+      background: transparent;
+      padding: 0 48px 0 20px;
+      color: #171717;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .search input::placeholder {
+      color: #a1a1a1;
+      font-weight: 700;
+    }
+
+    .search svg {
+      position: absolute;
+      right: 18px;
+      top: 12px;
+      width: 20px;
+      height: 20px;
+      stroke: #5c5c5c;
+    }
+
+    .home-link {
+      color: var(--black);
+      font-weight: 700;
+    }
+
+    .game-hint {
+      position: absolute;
+      left: 0;
+      top: 448px;
+      width: 1470px;
+      color: #737373;
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0;
+      z-index: 4;
+      transition: opacity 160ms linear;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .game-hint > span {
+      transition: opacity 160ms linear;
+    }
+
+    .game-hint:hover > span {
+      opacity: 0.6;
+    }
+
+    .game-hint .danger {
+      color: inherit;
+    }
+
+    .game-hint .restart {
+      color: inherit;
+    }
+
+    .game-hint .arrow {
+      color: inherit;
+      margin: 0 8px;
+    }
+
+    .game-hint .keycap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      height: 18px;
+      margin: 0 4px;
+      padding: 0 6px;
+      border: 1px solid var(--blue);
+      border-radius: 0;
+      background: transparent;
+      color: var(--blue);
+      font-size: 11px;
+      line-height: 1;
+      font-weight: 700;
+      vertical-align: 1px;
+    }
+
+    .game-score {
+      position: absolute;
+      right: 122px;
+      top: calc(var(--screen-design-height, 820px) - var(--score-safe-bottom));
+      width: 360px;
+      color: #737373;
+      font-size: 18px;
+      line-height: 1.4;
+      font-weight: 400;
+      text-align: right;
+      letter-spacing: 0;
+      opacity: 0;
+      transition: opacity 160ms linear;
+      z-index: 4;
+    }
+
+    .game-score.is-visible {
+      opacity: 1;
+    }
+
+    .game-score .best {
+      color: #d4d4d4;
+      margin-right: 16px;
+    }
+
+    .game-score .current {
+      color: #737373;
+    }
+
+    .game-jump-button {
+      position: absolute;
+      z-index: 5;
+      box-sizing: border-box;
+      border: 1px solid var(--blue);
+      border-radius: 999px;
+      font-family: inherit;
+      letter-spacing: 0;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .game-jump-button {
+      left: calc((var(--stage-width) - var(--search-width)) / 2);
+      top: calc(var(--message-top) + 49px);
+      width: var(--search-width);
+      height: 44px;
+      padding: 8px 12px;
+      background: transparent;
+      color: var(--blue);
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 700;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 160ms linear;
+    }
+
+    .game-jump-button:disabled {
+      cursor: default;
+    }
+
+    .artboard.is-playing .message,
+    .artboard.is-playing .game-hint {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .artboard.is-playing .game-jump-button {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .game {
+      position: absolute;
+      left: 0;
+      top: var(--game-flow-top);
+      width: 1470px;
+      height: calc(var(--screen-design-height, 820px) - var(--game-flow-top));
+      overflow: visible;
+      background: var(--page-bg);
+      user-select: none;
+    }
+
+    .game-canvas {
+      position: absolute;
+      left: 0;
+      bottom: var(--score-safe-bottom);
+      display: block;
+      width: 100%;
+      height: 470px;
+    }
+
+    .footer-shot {
+      position: absolute;
+      left: 0;
+      top: 820px;
+      width: 1470px;
+      height: 520px;
+      display: block;
+      object-fit: cover;
+      object-position: left top;
+    }
+
+    @media (max-width: 767px) {
+      .artboard {
+        width: 320px;
+        min-height: calc(var(--screen-design-height, 700px) + 642px);
+      }
+
+      .header-shot,
+      .footer-shot {
+        display: none;
+      }
+
+      .mobile-header {
+        position: absolute;
+        left: 0;
+        top: 0;
+        display: flex;
+        width: 320px;
+        padding: 20px 24px 0;
+        flex-direction: column;
+        gap: 44px;
+        background: var(--page-bg);
+        z-index: 5;
+      }
+
+      .mobile-header-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 272px;
+      }
+
+      .mobile-logo {
+        display: block;
+        width: 168px;
+        height: 38px;
+        object-fit: contain;
+      }
+
+      .mobile-lang {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        color: #737373;
+        font-size: 14px;
+        line-height: 1.7;
+        font-weight: 400;
+      }
+
+      .mobile-tabs {
+        display: flex;
+        width: 272px;
+        height: 40px;
+        overflow: hidden;
+        border-bottom: 1px solid #d4d4d4;
+        color: #171717;
+        font-size: 16px;
+        line-height: 22.4px;
+        font-weight: 400;
+        white-space: nowrap;
+      }
+
+      .mobile-tabs span {
+        flex: 0 0 auto;
+        padding: 8px;
+      }
+
+      .mobile-tabs span:first-child {
+        color: var(--blue);
+        border-bottom: 2px solid var(--blue);
+      }
+
+      .mobile-hot-topics {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        color: var(--blue);
+        font-size: 14px;
+        line-height: 1.7;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .message {
+        top: 176px;
+        width: 320px;
+        gap: 24px;
+      }
+
+      .message h1 {
+        width: 320px;
+      }
+
+      .assist {
+        grid-template-columns: 68px 150px 78px;
+        column-gap: 8px;
+        font-size: 16px;
+        line-height: 22.4px;
+      }
+
+      .search {
+        width: 150px;
+      }
+
+      .search input {
+        padding: 0 42px 0 20px;
+      }
+
+      .game-hint {
+        top: 312px;
+        width: 320px;
+      }
+
+      .game-score {
+        top: 336px;
+        width: 320px;
+      }
+
+      .game {
+        top: 352px;
+        width: 320px;
+        height: calc(var(--screen-design-height, 700px) - 352px);
+        min-height: 0;
+      }
+
+      .game-canvas {
+        top: auto;
+        right: auto;
+        bottom: 0;
+        left: 0;
+        width: 1470px;
+        height: 470px;
+      }
+
+      .mobile-footer {
+        position: absolute;
+        left: 0;
+        top: var(--screen-design-height, 700px);
+        display: flex;
+        width: 320px;
+        flex-direction: column;
+        background: var(--page-bg);
+      }
+
+      .mobile-footer-brand {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding: 40px 24px 16px;
+      }
+
+      .mobile-footer-logo {
+        width: 124px;
+        height: 28px;
+      }
+
+      .mobile-socials {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .mobile-socials img {
+        width: 24px;
+        height: 24px;
+        padding: 4px;
+        box-sizing: content-box;
+        opacity: 0.72;
+      }
+
+      .mobile-footer-index {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 44px;
+        min-height: 382px;
+        padding: 44px 24px;
+        overflow: hidden;
+        background: #e5e5e5;
+        color: #737373;
+        font-size: 16px;
+        line-height: 22.4px;
+        font-weight: 400;
+      }
+
+      .mobile-footer-links {
+        display: flex;
+        gap: 44px;
+        align-items: flex-start;
+      }
+
+      .mobile-footer-links ul,
+      .mobile-footer-groups ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .mobile-footer-links li {
+        margin-bottom: 8px;
+      }
+
+      .mobile-footer-link-pair {
+        display: flex;
+        gap: 16px;
+      }
+
+      .mobile-footer-groups {
+        display: flex;
+        flex-direction: column;
+        gap: 44px;
+      }
+
+      .mobile-footer-groups h2 {
+        margin: 0 0 8px;
+        color: #737373;
+        font-size: 16px;
+        line-height: 22.4px;
+        font-weight: 700;
+      }
+
+      .mobile-footer-groups ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 12px;
+      }
+
+      .mobile-footer-graphic {
+        align-self: flex-end;
+        width: 206px;
+        height: 133px;
+        margin-top: -84px;
+        object-fit: contain;
+      }
+
+      .mobile-footer-details {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        padding: 24px;
+        color: #a1a1a1;
+        font-size: 14px;
+        line-height: 1.7;
+        font-weight: 400;
+      }
+
+      .mobile-footer-details nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px 12px;
+      }
+    }
+
+    .viewport {
+      width: min(100vw, 767px);
+      min-height: 100vh;
+      margin: 0 auto;
+    }
+
+    :root {
+      --game-flow-top: 451px;
+      --score-safe-bottom: 44px;
+    }
+
+    .artboard {
+      width: var(--stage-width);
+      min-height: calc(var(--footer-top) + 642px);
+    }
+
+    .header-shot,
+    .footer-shot {
+      display: none;
+    }
+
+    .mobile-header {
+      position: absolute;
+      left: 0;
+      top: 0;
+      display: flex;
+      width: var(--stage-width);
+      padding: 20px var(--stage-padding) 0;
+      flex-direction: column;
+      gap: 44px;
+      background: var(--page-bg);
+      z-index: 5;
+    }
+
+    .mobile-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: calc(var(--stage-width) - var(--stage-padding) * 2);
+    }
+
+    .mobile-logo {
+      display: block;
+      width: 168px;
+      height: 38px;
+      object-fit: contain;
+    }
+
+    .mobile-lang {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: #737373;
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .mobile-tabs {
+      display: flex;
+      width: calc(var(--stage-width) - var(--stage-padding) * 2);
+      height: 40px;
+      overflow: hidden;
+      border-bottom: 1px solid #d4d4d4;
+      color: #171717;
+      font-size: 16px;
+      line-height: 22.4px;
+      font-weight: 400;
+      white-space: nowrap;
+    }
+
+    .mobile-tabs span {
+      flex: 0 0 auto;
+      padding: 8px;
+    }
+
+    .mobile-tabs span:first-child {
+      color: var(--blue);
+      border-bottom: 2px solid var(--blue);
+    }
+
+    .mobile-hot-topics {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      color: var(--blue);
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .message {
+      top: var(--message-top);
+      width: var(--stage-width);
+      gap: 20px;
+    }
+
+    .message h1 {
+      width: min(354px, calc(var(--stage-width) - 48px));
+      height: 29px;
+      font-size: 24px;
+    }
+
+    .assist {
+      grid-template-columns: max-content var(--search-width) max-content;
+      column-gap: var(--assist-gap);
+      font-size: 16px;
+      line-height: 22.4px;
+    }
+
+    .search {
+      width: var(--search-width);
+    }
+
+    .search input {
+      padding: 0 42px 0 20px;
+    }
+
+    .game-hint {
+      top: var(--hint-top);
+      width: var(--stage-width);
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+
+    .game-score {
+      right: 24px;
+      top: calc(var(--screen-design-height, 624px) - var(--score-safe-bottom));
+      width: 210px;
+      font-size: 18px;
+      line-height: 25.2px;
+      font-weight: 700;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .game {
+      top: 0;
+      width: var(--stage-width);
+      height: var(--screen-design-height, 624px);
+      min-height: 0;
+      overflow: visible;
+      z-index: 1;
+    }
+
+    .game-canvas {
+      top: auto;
+      right: auto;
+      bottom: auto;
+      left: 0;
+      width: var(--stage-width);
+      height: var(--screen-design-height, 624px);
+    }
+
+    .mobile-footer {
+      position: absolute;
+      left: 0;
+      top: var(--footer-top);
+      display: flex;
+      width: var(--stage-width);
+      flex-direction: column;
+      background: var(--page-bg);
+      z-index: 3;
+    }
+
+    .mobile-footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 40px 24px 16px;
+    }
+
+    .mobile-footer-logo {
+      width: 124px;
+      height: 28px;
+    }
+
+    .mobile-socials {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .mobile-socials img {
+      width: 24px;
+      height: 24px;
+      padding: 4px;
+      box-sizing: content-box;
+      opacity: 0.72;
+    }
+
+    .mobile-footer-index {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 44px;
+      min-height: 382px;
+      padding: 44px 24px;
+      overflow: hidden;
+      background: #e5e5e5;
+      color: #737373;
+      font-size: 16px;
+      line-height: 22.4px;
+      font-weight: 400;
+    }
+
+    .mobile-footer-links {
+      display: flex;
+      gap: 44px;
+      align-items: flex-start;
+    }
+
+    .mobile-footer-links ul,
+    .mobile-footer-groups ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .mobile-footer-links li {
+      margin-bottom: 8px;
+    }
+
+    .mobile-footer-link-pair {
+      display: flex;
+      gap: 16px;
+    }
+
+    .mobile-footer-groups {
+      display: flex;
+      flex-direction: column;
+      gap: 44px;
+    }
+
+    .mobile-footer-groups h2 {
+      margin: 0 0 8px;
+      color: #737373;
+      font-size: 16px;
+      line-height: 22.4px;
+      font-weight: 700;
+    }
+
+    .mobile-footer-groups ul {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 12px;
+    }
+
+    .mobile-footer-graphic {
+      align-self: flex-end;
+      width: 206px;
+      height: 133px;
+      margin-top: -84px;
+      object-fit: contain;
+    }
+
+    .mobile-footer-details {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      padding: 24px;
+      color: #a1a1a1;
+      font-size: 14px;
+      line-height: 1.7;
+      font-weight: 400;
+    }
+
+    .mobile-footer-details nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="viewport" id="viewport">
+    <main class="artboard" id="page">
+      <img class="header-shot" src="assets/pts-news-header-desktop.png" alt="">
+
+      <header class="mobile-header" aria-label="公視新聞手機版導覽">
+        <div class="mobile-header-top">
+          <img class="mobile-logo" src="https://www.figma.com/api/mcp/asset/1b3899c1-f7f3-4c90-a35b-e26f8d163ffa" alt="公視新聞">
+          <div class="mobile-lang">中文⌄</div>
+        </div>
+        <div>
+          <nav class="mobile-tabs" aria-label="分類">
+            <span>示意內容</span><span>示意內容</span><span>示意內容</span><span>示意內容</span><span>示意內容</span>
+          </nav>
+          <div class="mobile-hot-topics">
+            <span># 高鐵大誤點</span>
+            <span># 2026九合一大選</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="message" aria-labelledby="title">
+        <h1 id="title">
+          <span class="title-line">很抱歉，網頁不存在</span>
+          <span class="title-line">404 not found</span>
+        </h1>
+        <div class="assist">
+          <span>輸入關鍵字</span>
+          <form class="search" action="https://news.pts.org.tw/search" method="get">
+            <input type="search" name="q" placeholder="搜尋" aria-label="搜尋">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5" stroke-width="2"></circle>
+              <path d="m16 16 4 4" stroke-width="2" stroke-linecap="round"></path>
+            </svg>
+          </form>
+          <span>或回到<a class="home-link" href="https://news.pts.org.tw/">首頁</a></span>
+        </div>
+      </section>
+
+      <div class="game-hint" id="gameHint" role="button" tabindex="0"><span class="arrow">→</span><span>點我開始，邊玩邊看公視新聞前世今生</span><span class="arrow">←</span></div>
+      <div class="game-score" id="gameScore" aria-live="polite">000000</div>
+      <button class="game-jump-button" id="gameJumpButton" type="button" disabled>點我跳!!!!!</button>
+
+      <section class="game" id="game" aria-label="按空白鍵讓紅點跳上圖形">
+        <canvas class="game-canvas" id="gameCanvas" width="402" height="470"></canvas>
+      </section>
+
+      <img class="footer-shot" src="assets/pts-news-footer-desktop.png" alt="">
+
+      <footer class="mobile-footer">
+        <div class="mobile-footer-brand">
+          <img class="mobile-footer-logo" src="https://www.figma.com/api/mcp/asset/1b3899c1-f7f3-4c90-a35b-e26f8d163ffa" alt="公視新聞">
+          <div class="mobile-socials" aria-label="社群連結">
+            <img src="https://www.figma.com/api/mcp/asset/007ed860-5894-4fce-b51d-a46423bdfd64" alt="">
+            <img src="https://www.figma.com/api/mcp/asset/6995fcd0-f19b-4580-a226-edd480ae8237" alt="">
+            <img src="https://www.figma.com/api/mcp/asset/df15d92c-b470-4b93-a087-f95a7645dc41" alt="">
+            <img src="https://www.figma.com/api/mcp/asset/eefdd128-56d2-48e9-93e0-b31c39c46df9" alt="">
+            <img src="https://www.figma.com/api/mcp/asset/a4858631-c419-451c-8f76-cf34a560eb75" alt="">
+            <img src="https://www.figma.com/api/mcp/asset/55d3ee46-ed87-4456-b601-20f26ae284b8" alt="">
+          </div>
+        </div>
+        <div class="mobile-footer-index">
+          <div class="mobile-footer-links">
+            <ul>
+              <li>國際</li>
+              <li>政治</li>
+              <li>社會</li>
+              <li>環境</li>
+              <li>生活</li>
+              <li>社福人權</li>
+            </ul>
+            <div class="mobile-footer-link-pair">
+              <ul>
+                <li>Live正發生</li>
+                <li>深度專題</li>
+                <li>觀點</li>
+                <li>副刊</li>
+                <li>熱門議題</li>
+                <li>新聞小百科</li>
+              </ul>
+              <ul>
+                <li>影音</li>
+                <li>Podcast</li>
+                <li>節目</li>
+              </ul>
+            </div>
+          </div>
+          <div class="mobile-footer-groups">
+            <section>
+              <h2>公廣集團</h2>
+              <ul>
+                <li>公共電視</li>
+                <li>PTS TW</li>
+                <li>公視台語台</li>
+                <li>客家電視台</li>
+                <li>中華電視公司</li>
+                <li>Taiwan+</li>
+              </ul>
+            </section>
+            <section>
+              <h2>主題網站</h2>
+              <ul>
+                <li>我們的島</li>
+                <li>獨立特派員</li>
+                <li>公視新聞實驗室</li>
+                <li>PNN新聞議題中心</li>
+              </ul>
+            </section>
+          </div>
+          <img class="mobile-footer-graphic" src="https://www.figma.com/api/mcp/asset/361ce695-84a4-4bf7-998a-38cf6c1fb535" alt="">
+        </div>
+        <div class="mobile-footer-details">
+          <nav>
+            <span>關於我們</span>
+            <span>更正啟事</span>
+            <span>最新消息</span>
+            <span>服務條款</span>
+            <span>隱私權保護政策</span>
+          </nav>
+          <span>Copyright © 2020 Public Television Service Foundation. All Rights Reserved.</span>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const DESKTOP_DESIGN_WIDTH = 1470;
+    const MOBILE_MAX_WIDTH = 767;
+    const page = document.getElementById("page");
+    const viewport = document.getElementById("viewport");
+    const canvas = document.getElementById("gameCanvas");
+    const gameHint = document.getElementById("gameHint");
+    const gameScore = document.getElementById("gameScore");
+    const gameJumpButton = document.getElementById("gameJumpButton");
+    const ctx = canvas.getContext("2d");
+
+    const LOOP_WIDTH = 6620;
+    const BASE_GAME_HEIGHT = 470;
+    const BALL_RADIUS = 28;
+    const FLOOR_Y = 330;
+    const GRAVITY = 1420;
+    const JUMP_VELOCITY = -630;
+    const RUN_SPEED = 238;
+    const CAMERA_LEAD = 360;
+    const MOBILE_WORLD_SCALE = 0.6;
+
+    const palette = {
+      blue: "#007CFF",
+      deepBlue: "#0046A8",
+      red: "#FF1616",
+      coral: "#FF5050",
+      blush: "#EEA8A8",
+      gray: "#D9D9D9",
+      page: "#F5F5F5",
+    };
+    const repeatColors = [palette.blue, palette.deepBlue, palette.coral, palette.blush, palette.gray];
+    const repeatColorCache = new Map();
+
+    const platforms = [
+      { x: 0, y: FLOOR_Y, w: 520, h: 66, type: "bar", color: palette.blue, angle: 0 },
+      { x: 660, y: 252, w: 112, h: 112, type: "square", color: palette.gray, angle: -15, labelLines: ["網站創設於", "2010年"] },
+      { x: 890, y: 260, w: 230, h: 48, type: "bar", color: palette.deepBlue, angle: -18 },
+      { x: 1220, y: 232, w: 112, h: 112, type: "square", color: palette.coral, angle: 18, labelLines: ["2020年推出", "新聞速報", "Podcast"] },
+      { x: 1500, y: 258, w: 280, h: 52, type: "bar", color: palette.blue, angle: -8 },
+      { x: 1910, y: 238, w: 96, h: 96, type: "square", color: palette.blush, angle: 16 },
+      { x: 2140, y: 252, w: 270, h: 54, type: "bar", color: palette.deepBlue, angle: -14, label: "2023年設置PWA功能" },
+      { x: 2530, y: 252, w: 104, h: 104, type: "square", color: palette.gray, angle: 17 },
+      { x: 2780, y: 260, w: 250, h: 50, type: "bar", color: palette.coral, angle: -12, label: "2024年推出《一週大事》" },
+      { x: 3170, y: 224, w: 144, h: 144, type: "circle", color: palette.blue, angle: 0 },
+      { x: 3430, y: 256, w: 220, h: 48, type: "bar", color: palette.deepBlue, angle: 20, label: "2025年加入會員功能" },
+      { x: 3760, y: 232, w: 112, h: 112, type: "square", color: palette.blush, angle: -18 },
+      { x: 4020, y: 260, w: 290, h: 52, type: "bar", color: palette.blue, angle: -8, labelLines: ["會員就可以按讚收藏新聞"] },
+      { x: 4430, y: 246, w: 120, h: 120, type: "square", color: palette.deepBlue, angle: 14, label: "快加入會員" },
+      { x: 4710, y: 258, w: 232, h: 48, type: "bar", color: palette.gray, angle: -16 },
+      { x: 5050, y: 236, w: 118, h: 118, type: "square", color: palette.coral, angle: 18, labelLines: ["2020年9月", "第1次改版"] },
+      { x: 5350, y: 252, w: 260, h: 50, type: "bar", color: palette.blue, angle: -22, labelLines: ["2026年9月第2次改版"] },
+      { x: 5750, y: 228, w: 136, h: 136, type: "circle", color: palette.blush, angle: 0 },
+      { x: 6030, y: 256, w: 106, h: 106, type: "square", color: palette.gray, angle: -20, labelLines: ["未完待續"] },
+      { x: 6300, y: 264, w: 260, h: 52, type: "bar", color: palette.deepBlue, angle: -16, label: "手速挺快的嘛！" },
+    ];
+
+    function chooseRepeatColor(previousColor) {
+      const choices = repeatColors.filter((color) => color !== previousColor);
+      return choices[Math.floor(Math.random() * choices.length)] || repeatColors[0];
+    }
+
+    function buildRepeatPlatformColors(repeatIndex) {
+      const previousRound = repeatColorCache.get(repeatIndex - 1);
+      let previousColor = previousRound ? previousRound[previousRound.length - 1] : platforms[platforms.length - 1].color;
+      return platforms.map(() => {
+        const color = chooseRepeatColor(previousColor);
+        previousColor = color;
+        return color;
+      });
+    }
+
+    function getRepeatPlatformColor(repeatIndex, platformIndex, originalColor) {
+      if (repeatIndex === 0) return originalColor;
+      if (!repeatColorCache.has(repeatIndex)) {
+        repeatColorCache.set(repeatIndex, buildRepeatPlatformColors(repeatIndex));
+      }
+      return repeatColorCache.get(repeatIndex)[platformIndex] || originalColor;
+    }
+
+    const state = {
+      x: 151,
+      y: FLOOR_Y - BALL_RADIUS,
+      vy: 0,
+      cameraX: 0,
+      lastTime: 0,
+      grounded: false,
+      gameOver: false,
+      started: false,
+      resetTimer: 0,
+      activePlatform: -1,
+      clock: 0,
+      lap: 0,
+      score: 0,
+      bestScore: 0,
+      hasRecord: false,
+      ballHidden: false,
+      stageWidth: 402,
+      canvasHeight: 624,
+      hintTop: 451,
+      worldOffsetY: 0,
+      worldScale: MOBILE_WORLD_SCALE,
+    };
+
+    function isMobileLayout() {
+      return true;
+    }
+
+    function fitArtboard() {
+      const stageWidth = Math.min(window.innerWidth, MOBILE_MAX_WIDTH);
+      const scale = 1;
+      const viewportHeight = Math.max(
+        window.innerHeight || 0,
+        document.documentElement.clientHeight || 0,
+        window.visualViewport ? window.visualViewport.height : 0
+      );
+      const screenDesignHeight = Math.ceil(viewportHeight / scale) + 1;
+      const heightRatio = Math.max(-0.55, (screenDesignHeight - 624) / 176);
+      const messageTop = 256 + heightRatio * 40;
+      const hintTop = 406 + heightRatio * 68;
+      const scoreSafeBottom = Math.max(30, Math.min(44, 44 + heightRatio * 4));
+      const footerGap = 24;
+      const stagePadding = 24;
+      const assistGap = Math.max(8, Math.min(20, (stageWidth - 320) * 0.146 + 8));
+      const searchWidth = Math.max(72, Math.min(150, stageWidth - stagePadding * 2 - 184 - assistGap * 2));
+      page.style.setProperty("--stage-width", `${stageWidth}px`);
+      page.style.setProperty("--stage-padding", `${stagePadding}px`);
+      page.style.setProperty("--assist-gap", `${assistGap}px`);
+      page.style.setProperty("--search-width", `${searchWidth}px`);
+      page.style.setProperty("--screen-design-height", `${screenDesignHeight}px`);
+      page.style.setProperty("--footer-top", `${screenDesignHeight + footerGap}px`);
+      page.style.setProperty("--score-safe-bottom", `${scoreSafeBottom}px`);
+      page.style.setProperty("--message-top", `${messageTop}px`);
+      page.style.setProperty("--hint-top", `${hintTop}px`);
+      page.style.transform = `scale(${scale})`;
+      page.style.marginLeft = "0";
+      state.stageWidth = Math.ceil(stageWidth);
+      state.canvasHeight = Math.ceil(screenDesignHeight);
+      state.hintTop = hintTop;
+      canvas.width = state.stageWidth;
+      canvas.height = state.canvasHeight;
+      updateWorldMetrics();
+      viewport.style.height = `${page.offsetHeight * scale}px`;
+    }
+
+    function getMobileViewWidth() {
+      return state.stageWidth / state.worldScale;
+    }
+
+    function platformVisualHeight(platform) {
+      return platform.h * state.worldScale;
+    }
+
+    function updateWorldMetrics() {
+      const heightRatio = Math.max(-0.55, (state.canvasHeight - 624) / 176);
+      const scoreSafeBottom = Math.max(30, Math.min(44, 44 + heightRatio * 4));
+      const scoreTop = state.canvasHeight - scoreSafeBottom;
+      const minPlatformY = Math.min(...platforms.map((platform) => platform.y));
+      const hintClearance = state.hintTop + 52;
+      const scale = MOBILE_WORLD_SCALE;
+      const desiredTop = 520 + heightRatio * 144;
+      const minimumFirstPlatformTop = hintClearance + (FLOOR_Y - minPlatformY) * scale;
+      const desiredFirstPlatformTop = Math.min(scoreTop - 42, Math.max(desiredTop, minimumFirstPlatformTop));
+      state.worldScale = scale;
+      state.worldOffsetY = desiredFirstPlatformTop - FLOOR_Y * state.worldScale;
+    }
+
+    function formatScore(value) {
+      return String(Math.max(0, Math.floor(value))).padStart(6, "0");
+    }
+
+    function renderScore() {
+      const current = formatScore(state.score);
+      if (!state.hasRecord) {
+        gameScore.textContent = current;
+        return;
+      }
+
+      gameScore.innerHTML = `<span class="best">最高紀錄 ${formatScore(state.bestScore)}</span><span class="current">${current}</span>`;
+    }
+
+    function renderStartHint() {
+      if (isMobileLayout()) {
+        gameHint.innerHTML = '<span class="arrow">→</span><span>點我開始，邊玩邊看公視新聞前世今生</span><span class="arrow">←</span>';
+        return;
+      }
+
+      gameHint.innerHTML = '<span class="arrow">→</span><span>點我開始，邊玩邊看公視新聞前世今生</span><span class="arrow">←</span>';
+    }
+
+    function updateUiMode() {
+      const isPlaying = state.started && !state.gameOver;
+      page.classList.toggle("is-playing", isPlaying);
+      page.classList.toggle("is-game-over", state.gameOver);
+      gameJumpButton.disabled = !isPlaying;
+    }
+
+    function resetGame() {
+      state.x = 151;
+      state.y = FLOOR_Y - BALL_RADIUS;
+      state.vy = 0;
+      state.cameraX = 0;
+      state.lastTime = 0;
+      state.grounded = false;
+      state.gameOver = false;
+      state.started = false;
+      state.resetTimer = 0;
+      state.ballHidden = false;
+      state.activePlatform = -1;
+      state.lap = 0;
+      state.score = 0;
+      renderStartHint();
+      gameHint.style.opacity = "1";
+      gameScore.classList.remove("is-visible");
+      renderScore();
+      updateUiMode();
+      platforms.forEach((platform) => {
+        platform.wobble = 0;
+      });
+    }
+
+    function finishGame() {
+      state.score = Math.max(state.score, Math.floor(Math.max(0, state.x - 151) / 18));
+      state.bestScore = Math.max(state.bestScore, state.score);
+      state.hasRecord = true;
+      state.gameOver = true;
+      state.resetTimer = 999;
+      state.ballHidden = false;
+      if (isMobileLayout()) {
+        gameHint.innerHTML = '<span class="arrow">→</span><span class="danger">Game Over！</span><span class="restart">點我重新開始</span><span class="arrow">←</span>';
+      } else {
+        gameHint.innerHTML = '<span class="arrow">→</span><span class="danger">Game Over！</span><span class="restart">點我重新開始</span><span class="arrow">←</span>';
+      }
+      gameHint.style.opacity = "1";
+      gameScore.classList.add("is-visible");
+      renderScore();
+      updateUiMode();
+    }
+
+    function mobileY(value) {
+      return state.worldOffsetY + value * state.worldScale;
+    }
+
+    function splitLabel(label, maxChars) {
+      const words = String(label).split(" ");
+      if (words.length > 1) {
+        const lines = [];
+        let line = "";
+        words.forEach((word) => {
+          const next = line ? `${line} ${word}` : word;
+          if (next.length > maxChars && line) {
+            lines.push(line);
+            line = word;
+          } else {
+            line = next;
+          }
+        });
+        if (line) lines.push(line);
+        return lines;
+      }
+
+      const lines = [];
+      for (let index = 0; index < label.length; index += maxChars) {
+        lines.push(label.slice(index, index + maxChars));
+      }
+      return lines;
+    }
+
+    function drawPlatformText(platform, width, height, scale = 1) {
+      if (!platform.label && !platform.labelLines) return;
+      const fontSize = 12;
+      const lineHeight = Math.round(fontSize * 1.18);
+      const maxChars = Math.max(4, Math.floor(width / (fontSize * 0.92)));
+      const lines = (platform.labelLines || splitLabel(platform.label, maxChars)).slice(0, 3);
+      const textColor = platform.labelColor || (platform.currentColor === palette.gray || platform.currentColor === palette.blush ? "#111111" : "#FFFFFF");
+      ctx.fillStyle = textColor;
+      ctx.font = `400 ${fontSize}px "Noto Sans TC", "Roboto", sans-serif`;
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      const startY = -((lines.length - 1) * lineHeight) / 2;
+      lines.forEach((line, index) => {
+        ctx.fillText(line, 0, startY + index * lineHeight, width - Math.round(14 * scale));
+      });
+    }
+
+    function drawPlatform(platform, offset, index) {
+      const sx = (platform.x + offset - state.cameraX) * state.worldScale;
+      const wobble = platform.wobble || 0;
+      const idleAmount = index === 0 ? 0 : platform.type === "circle" ? 0.55 : 1.65;
+      const idleSpeed = platform.type === "square" ? 1.45 : 1.05;
+      const idleRotation = Math.sin(state.clock * idleSpeed + index * 0.87) * idleAmount;
+      const touchRotation = Math.sin(wobble * Math.PI) * 3.6;
+      const scaledWidth = platform.w * state.worldScale;
+      const scaledHeight = platformVisualHeight(platform);
+      const sy = mobileY(platform.y);
+      ctx.save();
+      ctx.translate(sx + scaledWidth / 2, sy + scaledHeight / 2);
+      ctx.rotate(((platform.angle + idleRotation + touchRotation) * Math.PI) / 180);
+      const repeatIndex = Math.round(offset / LOOP_WIDTH);
+      const platformColor = getRepeatPlatformColor(repeatIndex, index, platform.color);
+      platform.currentColor = platformColor;
+      ctx.fillStyle = platformColor;
+
+      if (platform.type === "circle") {
+        ctx.beginPath();
+        ctx.arc(0, 0, scaledWidth / 2, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillRect(-scaledWidth / 2, -scaledHeight / 2, scaledWidth, scaledHeight);
+      }
+
+      if (offset === 0) drawPlatformText(platform, scaledWidth, scaledHeight, state.worldScale);
+
+      ctx.restore();
+    }
+
+    function getPlatformTop(platform, offset, x) {
+      const platformX = platform.x + offset;
+      if (x < platformX - BALL_RADIUS * 0.55 || x > platformX + platform.w + BALL_RADIUS * 0.55) {
+        return null;
+      }
+
+      if (platform.type === "circle") {
+        const cx = platformX + platform.w / 2;
+        const r = platform.w / 2;
+        const dx = x - cx;
+        if (Math.abs(dx) > r) return null;
+        return platform.y + r - Math.sqrt(r * r - dx * dx);
+      }
+
+      if (Math.abs(platform.angle) > 2) {
+        const cx = platformX + platform.w / 2;
+        const cy = platform.y + platform.h / 2;
+        const rad = (platform.angle * Math.PI) / 180;
+        const localX = x - cx;
+        return cy - platform.h / 2 + Math.tan(rad) * localX;
+      }
+
+      return platform.y;
+    }
+
+    function collideWithPlatforms(prevY) {
+      state.grounded = false;
+      const ballBottom = state.y + BALL_RADIUS;
+      const prevBottom = prevY + BALL_RADIUS;
+      const startOffset = Math.floor((state.x - LOOP_WIDTH) / LOOP_WIDTH) * LOOP_WIDTH;
+
+      for (let repeat = 0; repeat < 3; repeat += 1) {
+        const offset = startOffset + repeat * LOOP_WIDTH;
+        for (let index = 0; index < platforms.length; index += 1) {
+          const platform = platforms[index];
+          const top = getPlatformTop(platform, offset, state.x);
+          if (top === null) continue;
+          if (state.vy >= 0 && prevBottom <= top + 28 && ballBottom >= top - 10 && ballBottom <= top + 46) {
+            state.y = top - BALL_RADIUS;
+            state.vy = 0;
+            state.grounded = true;
+            const platformKey = `${index}-${offset}`;
+            if (index !== 0 && state.activePlatform !== platformKey) {
+              platform.wobble = 1;
+              state.activePlatform = platformKey;
+            }
+            return;
+          }
+        }
+      }
+    }
+
+    function startGame() {
+      if (state.gameOver) {
+        resetGame();
+      }
+
+      state.started = true;
+      gameScore.classList.add("is-visible");
+      gameHint.style.opacity = "0";
+      updateUiMode();
+    }
+
+    function jumpBall() {
+      if (!state.started || state.gameOver) return;
+      if (state.grounded) {
+        state.vy = JUMP_VELOCITY;
+        state.grounded = false;
+        state.activePlatform = -1;
+      }
+    }
+
+    function restartAndStart() {
+      resetGame();
+      startGame();
+    }
+
+    function isTypingTarget(target) {
+      return Boolean(target && target.closest('input, textarea, select, [contenteditable="true"]'));
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, state.stageWidth, state.canvasHeight);
+      ctx.fillStyle = palette.page;
+      ctx.fillRect(0, 0, state.stageWidth, state.canvasHeight);
+
+      const startOffset = Math.floor(state.cameraX / LOOP_WIDTH) * LOOP_WIDTH;
+      for (let repeat = 0; repeat < 3; repeat += 1) {
+        const offset = startOffset + repeat * LOOP_WIDTH;
+        platforms.forEach((platform, index) => drawPlatform(platform, offset, index));
+      }
+
+      const ballScreenX = (state.x - state.cameraX) * state.worldScale;
+      const ballScreenY = mobileY(state.y);
+      const mobileBallRadius = BALL_RADIUS * state.worldScale;
+      if (!state.ballHidden) {
+        ctx.fillStyle = palette.red;
+        ctx.beginPath();
+        ctx.arc(ballScreenX, ballScreenY, mobileBallRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function update(time) {
+      if (!state.lastTime) state.lastTime = time;
+      const dt = Math.min((time - state.lastTime) / 1000, 0.032);
+      state.lastTime = time;
+      state.clock += dt;
+
+      platforms.forEach((platform) => {
+        platform.wobble = Math.max(0, (platform.wobble || 0) - dt * 3.6);
+      });
+
+      if (state.started && !state.gameOver) {
+        const prevY = state.y;
+        state.lap = Math.floor(state.x / LOOP_WIDTH);
+        const speedBoost = 1 + state.lap * 0.14;
+        state.x += RUN_SPEED * speedBoost * dt;
+        state.score = Math.max(state.score, Math.floor(Math.max(0, state.x - 151) / 18));
+        renderScore();
+        state.vy += GRAVITY * dt;
+        state.y += state.vy * dt;
+        if (state.y < BALL_RADIUS + 4) {
+          state.y = BALL_RADIUS + 4;
+          state.vy = 0;
+        }
+        collideWithPlatforms(prevY);
+        state.cameraX = Math.max(0, state.x - getMobileViewWidth() * 0.38);
+
+        if (state.y > BASE_GAME_HEIGHT + BALL_RADIUS) {
+          finishGame();
+        }
+      } else if (state.gameOver) {
+        if (!state.ballHidden) {
+          state.vy += GRAVITY * dt;
+          state.y += state.vy * dt;
+          if (mobileY(state.y) - BALL_RADIUS * state.worldScale > state.canvasHeight + 80) {
+            state.ballHidden = true;
+          }
+        }
+        state.resetTimer -= dt;
+        if (state.resetTimer <= 0) resetGame();
+      }
+
+      draw();
+      requestAnimationFrame(update);
+    }
+
+    window.addEventListener("resize", () => {
+      fitArtboard();
+      if (!state.started && !state.gameOver) renderStartHint();
+    });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener("resize", () => {
+        fitArtboard();
+        if (!state.started && !state.gameOver) renderStartHint();
+      });
+    }
+    window.addEventListener("keydown", (event) => {
+      if (event.code !== "Space" || isTypingTarget(event.target)) return;
+      if (!state.started && !state.gameOver) return;
+      event.preventDefault();
+      if (state.gameOver) {
+        restartAndStart();
+        return;
+      }
+      jumpBall();
+    });
+    gameHint.addEventListener("click", startGame);
+    gameHint.addEventListener("keydown", (event) => {
+      if (event.code !== "Enter" && event.code !== "Space") return;
+      event.preventDefault();
+      startGame();
+    });
+    gameJumpButton.addEventListener("click", jumpBall);
+
+    fitArtboard();
+    resetGame();
+    requestAnimationFrame(update);
+  </script>
+</body>
+</html>
